@@ -55,7 +55,7 @@ a {
     color: #FFB0BD;
 }
 .Icon{
-    margin-top: 5px;
+    margin-top: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,4 +86,7 @@ a {
     background-color: #FFB0BD;
     min-height: 100px;
     padding: 20px;
+}
+.giohang{
+    height: 40px;
 }

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tất cả</title>
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -28,7 +28,8 @@
                         <a href="#" class="auth">Đăng Nhập</a>
                         <span class="space"> | </span>
                         <a href="#" class="auth">Đăng Ký</a>
-                        <a href="#" class="cart"><i class="fa-solid fa-cart-plus"></i></a>
+                        <a href="#" class="cart"> </a>
+                        <img class="giohang" src="./image/giohang.png">
                     </div>
                 </div>
             </div>
@@ -101,7 +102,7 @@
 
                     echo '<div class="col-3">';
                     echo '<div class="card">';
-                    echo '<img class="card-img-top" src="./image/' . $productId . '.jpg" alt="' . $productName . '">';
+                    echo '<img class="card-img-top" src="./image/SanPham/' . $productId . '.jpg" alt="' . $productName . '">';
                     echo '<div class="card-body">';
                     echo '<h5 class="card-title">' . $productName . '</h5>';
                     echo '<p class="card-text">' . $productPrice . '</p>';
@@ -131,6 +132,8 @@
             </div>
         </div>
     </div>
+
+    <script src="https://kit.fontawesome.com/d3f4e54f8d.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
