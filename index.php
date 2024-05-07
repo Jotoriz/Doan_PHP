@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tất cả</title>
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./stylea.css">
 </head>
 
 <body>
@@ -14,8 +14,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-3">
-                    <a href="#"><img class="logo"
-                            src="https://pos.nvncdn.com/cba2a3-7534/store/20240409_mNXzwl3H.png" /></a>
+                    <a href=""><img class="logo" src="./image/logo.jpg" /></a>
                 </div>
                 <div class="col-5">
                     <div class="search-container">
@@ -23,11 +22,11 @@
                         <span class="search-icon"><i class="fas fa-search"></i></span>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-4">
                     <div class="Icon">
-                        <a href="#" class="auth">Đăng Nhập</a>
-                        <span class="space"> | </span>
-                        <a href="#" class="auth">Đăng Ký</a>
+                        <a href="./auth/DangNhap.php" class="auth_link"> Đăng Nhập</a>
+                        /
+                        <a href="./auth/DangKy.php" class="auth_link"> Đăng Ký</a>
                         <a href="#" class="cart"> </a>
                         <img class="giohang" src="./image/giohang.png">
                     </div>

@@ -2,13 +2,13 @@
     ser-select: none; 
 } */
 .logo{
-    height: 60px;
-    width: 113px;
+    height: 100px;
     align-items: center;
+    border-radius: 8px;
 }
 .header{
     display: flex;
-    margin-top: 30px;
+    margin-top: 10px;
     justify-content: center;
     align-items: center;
 }
@@ -19,7 +19,7 @@ a {
   cursor: pointer; 
 }
 .search-container {
-    margin-top: 10px;
+    margin-top: 25px;
     display: flex;
     align-items: center;
     border:3px solid #FFB0BD;
@@ -51,11 +51,14 @@ a {
 .space{
     margin: 0 5px;
 }
-.auth:hover{
+.auth_link{
+    transition: ease-in 0.2s;
+}
+.auth_link:hover{
     color: #FFB0BD;
 }
 .Icon{
-    margin-top: 8px;
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -88,5 +91,13 @@ a {
     padding: 20px;
 }
 .giohang{
-    height: 40px;
+    padding: 5px;
+    height: 50px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: ease-in 0.3s;
+
+}
+.giohang:hover{
+    background-color: #FFB0BD;
 }

@@ -1,0 +1,52 @@
+.auth{
+    margin-top: 30px;
+    width: 800px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.212);
+    padding-bottom: 30px;
+}
+.swich{
+
+    text-align: center;
+
+    
+}
+.au{
+    padding-top: 10px;
+    height: 50px;
+    font-size: larger;
+    color: #FFB0BD;
+    cursor: pointer;
+    transition: ease 0.2s;
+}
+.au:hover{
+    border-bottom: 3px solid #FFB0BD;
+}
+
+.form{
+    margin-top: 40px;
+    text-align: center;
+}
+.inputs{
+    border: none;
+    outline: none;
+    background: none;
+    box-shadow: none; 
+    margin-left: 48px;
+    margin-top: 20px;
+    width: 700px;
+    height: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.212);
+}
+.submit{
+    margin-left: 40px;
+    width: 700px;
+    margin-left: 48px;
+    margin-top: 20px;
+    border-radius: 10px;
+    height: 40px;
+    border: none;
+    color: white;
+    font-size: larger;
+    background-color: #FFB0BD;
+}
