@@ -10,68 +10,11 @@
 </head>
 
 <body>
-    <div class="header">
-        <div class="container">
-            <div class="row">
-                <div class="col-3">
-                    <a href=""><img class="logo" src="./image/logo.jpg" /></a>
-                </div>
-                <div class="col-5">
-                    <div class="search-container">
-                        <input type="text" id="search-input" class="search-input" placeholder="Tìm kiếm sản phẩm">
-                        <span class="search-icon"><i class="fas fa-search"></i></span>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="Icon">
-                        <a href="./auth/DangNhap.php" class="auth_link"> Đăng Nhập</a>
-                        /
-                        <a href="./auth/DangKy.php" class="auth_link"> Đăng Ký</a>
-                        <a href="#" class="cart"> </a>
-                        <img class="giohang" src="./image/giohang.png">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="subHeader">
-        <div class="container">
-            <div class="row">
-                <div class="col-2 item">
-                    <img class="hinhsubHeader"
-                        src="https://cdn0.fahasa.com/media/wysiwyg/Thang-05-2024/Icon_VanHoc_120x120.png" />
-                    <p>Chuột</p>
-                </div>
-                <div class="col-2 item">
-                    <img class="hinhsubHeader"
-                        src="https://cdn0.fahasa.com/media/wysiwyg/Thang-05-2024/Icon_VanHoc_120x120.png" />
-                    <p>Chuột</p>
-                </div>
-                <div class="col-2 item">
-                    <img class="hinhsubHeader"
-                        src="https://cdn0.fahasa.com/media/wysiwyg/Thang-05-2024/Icon_VanHoc_120x120.png" />
-                    <p>Chuột</p>
-                </div>
-                <div class="col-2 item">
-                    <img class="hinhsubHeader"
-                        src="https://cdn0.fahasa.com/media/wysiwyg/Thang-05-2024/Icon_VanHoc_120x120.png" />
-                    <p>Chuột</p>
-                </div>
-                <div class="col-2 item">
-                    <img class="hinhsubHeader"
-                        src="https://cdn0.fahasa.com/media/wysiwyg/Thang-05-2024/Icon_VanHoc_120x120.png" />
-                    <br />
-                    <p>Chuột</p>
-                </div>
-                <div class="col-2 item">
-                    <img class="hinhsubHeader"
-                        src="https://cdn0.fahasa.com/media/wysiwyg/Thang-05-2024/Icon_VanHoc_120x120.png" />
-                    <br />
-                    <p>Chuột</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php
+        include "Header.php";
+
+        include "SubHeader.php";
+    ?>    
     <div class="product">
         <div class="container">
             <div class="row" id="product-grid" style="padding: 40px 70px">
@@ -130,6 +73,9 @@
                 </nav>
             </div>
         </div>
+        <?php
+            include "Footer.php";
+        ?>    
     </div>
 
     <script src="https://kit.fontawesome.com/d3f4e54f8d.js" crossorigin="anonymous"></script>

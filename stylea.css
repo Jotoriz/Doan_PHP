@@ -101,3 +101,8 @@ a {
 .giohang:hover{
     background-color: #FFB0BD;
 }
+.footer{
+    margin-top: 10px;
+    background-color: #FFB0BD;
+    padding-top: 20px;
+}
