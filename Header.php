@@ -2,7 +2,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-3">
-                    <a href=""><img class="logo" src="./image/logo.jpg" /></a>
+                    <a href=""><img class="logo" src="./image/logo.png" /></a>
                 </div>
                 <div class="col-5">
                     <div class="search-container">
