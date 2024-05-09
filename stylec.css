@@ -94,8 +94,7 @@ a {
 .giohang{
     display: flex;
     justify-content: center;
-    align-items: center;
-    text-align: center;
+
     margin-left: 10px;
     padding: 5px;
     height: 30px;
@@ -112,4 +111,9 @@ a {
     margin-top: 10px;
     background-color: #FFB0BD;
     padding-top: 20px;
+}
+.pagination{
+    display: flex;
+    justify-content: center;
+
 }
