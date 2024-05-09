@@ -6,15 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tất cả</title>
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="./stylea.css">
+    <link rel="stylesheet" href="./stylec.css">
 </head>
 
 <body>
     <?php
-        include "Header.php";
+    include "Header.php";
 
-        include "SubHeader.php";
-    ?>    
+    include "SubHeader.php";
+    ?>
+
     <div class="product">
         <div class="container">
             <div class="row" id="product-grid" style="padding: 40px 70px">
@@ -54,13 +55,13 @@
                 }
                 ?>
             </div>
-            
-        </div>
-        <?php
-            include "Footer.php";
-        ?>    
-    </div>
 
+        </div>
+
+    </div>
+    <?php
+    include "Footer.php";
+    ?>
     <script src="https://kit.fontawesome.com/d3f4e54f8d.js" crossorigin="anonymous"></script>
 </body>
 
