@@ -66,7 +66,7 @@
                     <ul class="pagination justify-content-center" id="pagination">
                         <?php for ($page = 1; $page <= $totalPages; $page++) { ?>
                             <li class="page-item <?php echo ($page == $currentPage) ? 'active' : ''; ?>">
-                                <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+                                <a class="page-link" href="ShopCart.php?page=<?php echo $page; ?>"><?php echo $page; ?></a>
                             </li>
                         <?php } ?>
                     </ul>
