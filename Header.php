@@ -13,12 +13,24 @@
                 <div class="col-4">
                     <div class="Icon">
                         <a href="./auth/DangNhap.php" class="auth_link"> Đăng Nhập</a>
-                        /
+                        <span>|</span>
                         <a href="./auth/DangKy.php" class="auth_link"> Đăng Ký</a>
-                        <a href="#" class="cart"> </a>
-                        <img class="giohang" src="./image/giohang.png">
+
+                            <li class="nav-item nav-link active">
+                                <a class="nav-link" href="ShopCart.php">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <?php
+                                        $totalItemsInCart = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+
+                                        if ($totalItemsInCart > 0) {
+                                            echo '<span class="badge badge-pill badge-danger">' . $totalItemsInCart . '</span>';
+                                        }
+                                    ?>
+                                </a>
+                            </li>
                     </div>
                 </div>
             </div>
         </div>
+        
     </div>

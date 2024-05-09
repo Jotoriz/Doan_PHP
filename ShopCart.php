@@ -43,7 +43,7 @@
                     $totalCounter = 0;
                     $itemCounter = 0;
                     foreach($_SESSION['cart'] as $i => $item) {
-                        $imgUrl = "image_MonAn/" . $item["hinh"];
+                        $imgUrl = "image/" . $item["hinh"];
                         $total = (float)$item["donGia"] * (int)$item["sl"];
                         $totalCounter += $total;
                         $itemCounter += $item["sl"];
