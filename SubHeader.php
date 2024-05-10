@@ -11,7 +11,6 @@ $loaiSPs = $pdo->query($sql);
             <?php foreach ($loaiSPs as $loaiSP) : ?>
                 <div class="col-1 item"> <!-- Chia cột thành 8 phần (1/8 của hàng) -->
                     <img class="hinhsubHeader" src="image/LoaiSP/<?php echo $loaiSP['hinh']; ?>" />
-                    <br> </br>
                     <p><?php echo $loaiSP['TenLoai']; ?></p>
                 </div>
             <?php endforeach; ?>
