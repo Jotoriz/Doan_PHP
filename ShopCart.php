@@ -8,6 +8,93 @@
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="stylec.css">
 </head>
+<?php
+    $pdo = new PDO("mysql:host=localhost;dbname=ql_nha_hang", "root", "");
+    $pdo->query("set names utf8");
+
+    $sqlLoaiMon = "select * from loai_mon_an";
+    $loai_mon = $pdo->query($sqlLoaiMon);
+    //Giỏ hàng
+    session_start();
+    if(!isset($_SESSION['cart']))
+    {
+        $_SESSION['cart']=[];
+    }
+    //Xóa ALL giỏ hàng
+    if(isset($_GET['emptyCart']) && ($_GET['emptyCart'] == 1))
+    {
+        unset($_SESSION['cart']);
+    }
+    //Xóa item trong giỏ
+    if(isset($_GET['delId']) && ($_GET['delId'] >= 0))
+    {
+        array_splice($_SESSION['cart'], $_GET['delId'], 1);
+    }
+    //Update item trong giỏ
+    if(isset ($_GET['updateId'])&&($_GET['updateId']>=0))
+    {
+        $index= $_GET['updateId'];
+        if(isset($_SESSION['cart'][$index]))
+        {
+            $new_quantily=$_GET['num_sl'];
+            $_SESSION['cart'][$index]['sl']=$new_quantily;
+        }
+    }
+    //Lấy dữ liệu từ form Xem Chi tiết
+    if(isset($_POST['add_to_cart'])&&($_POST['add_to_cart']))
+    {
+        $maMon=$_POST['maMon'];
+        $tenMon=$_POST['tenMon'];
+        $hinh=$_POST['hinh'];
+        $donGia=$_POST['donGia'];
+        $sl=$_POST['sl'];
+
+        $flag=0;
+        $count = count($_SESSION['cart']);
+        for($i=0;$i<$count;$i++)
+        {
+            $item=$_SESSION['cart'][$i];
+            if($item["maMon"]==$maMon)
+            {
+                $flag=1;
+                $sl_new=$sl+$item["sl"];
+                $item["sl"]=$sl_new;
+                $_SESSION['cart'][$i]=$item;
+                break;
+            }
+        }
+        if($flag == 0)
+        {
+            $sp=array(
+                'maMon'=>$maMon,
+                'tenMon'=>$tenMon,
+                'hinh'=>$hinh,
+                'donGia'=>$donGia,
+                'sl'=>$sl
+            );
+            $_SESSION['cart'][]=$sp;
+        }
+    }
+    if (isset($_POST['add_to_cart'])) {
+        if (isset($_SESSION['maKH'])) {
+            $maMon = $_POST['maMon'];
+            $tenMon = $_POST['tenMon'];
+            $hinh = $_POST['hinh'];
+            $donGia = $_POST['donGia'];
+            $sl = $_POST['sl'];
+    
+            $maKH = $_SESSION['maKH'];
+    
+            $sql = "INSERT INTO gio_hang (maMon, tenMon, hinh, donGia, sl, maKH) VALUES ('$maMon', '$tenMon', '$hinh', '$donGia', '$sl', '$maKH')";
+    
+            $pdo->query($sql);
+        } else {
+            header("Location: login.php");
+            exit;
+        }
+    }
+    
+?>
 
 <body>
     <?php
@@ -106,3 +193,33 @@
 </body>
 
 </html>
+<script>
+function updateTotal() {
+    var total = 0;
+    var countChecked = 0;
+
+    var checkboxes = document.querySelectorAll('.item-checkbox:checked');
+
+    checkboxes.forEach(function(checkbox) {
+        var rowIndex = checkbox.value;
+        var isChecked = checkbox.checked;
+        if (isChecked) {
+            var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace('$', ''));
+            total += totalItem;
+            countChecked++;
+        }
+    });
+
+    total = total.toFixed(2);
+
+    if (total.endsWith('.00')) {
+        total = total.slice(0, -3); 
+    }
+
+    if (countChecked > 0) {
+        document.querySelector('#totalPrice').innerText = total + ' VNĐ';
+    } else {
+        document.querySelector('#totalPrice').innerText = '0 VNĐ';
+    }
+}
+</script>
