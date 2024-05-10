@@ -1,0 +1,23 @@
+.SanPham{
+    margin-top: 40px;
+}
+.mainImg{
+    height: 500px;
+}
+.buttons{
+    margin-top: 30px;
+}
+#quantity{
+    width: 30px;
+    pointer-events: none;
+    background-color: #fff;
+}
+.Imgcon{
+    height: 100px;
+    cursor: pointer;
+    padding: 2px;
+}
+.Imgcon:hover{
+    border: 2px solid #FFB0BD;
+    padding: 0px;
+}

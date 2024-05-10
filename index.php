@@ -44,6 +44,7 @@
                     $productPrice = $product['Gia'];
 
                     echo '<div class="col-3">';
+                    echo '<a href="ChiTietSP.php?id=' . $productId . '">';
                     echo '<div class="card">';
                     echo '<img class="card-img-top" src="./image/SanPham/' . $productId . '.jpg" alt="' . $productName . '">';
                     echo '<div class="card-body">';
@@ -51,6 +52,7 @@
                     echo '<p class="card-text">' . $productPrice . '</p>';
                     echo '</div>';
                     echo '</div>';
+                    echo '</a>';
                     echo '</div>';
                 }
                 ?>
