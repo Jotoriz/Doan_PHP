@@ -52,12 +52,12 @@
                         <tr>
                             <td>
                                 <input type="checkbox" name="deleteItem[]" value="<?php echo $i; ?>" class="item-checkbox"
-                                    onchange="updateTotal()"> <!-- Thêm onchange -->
+                                    onchange="updateTotal()">
                                 <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2"
                                     style="width:60px;"><?php echo $item['tenMon']; ?>
 
                             </td>
-                            <td id="price_<?php echo $i; ?>"> <!-- Thêm id cho mỗi giá -->
+                            <td id="price_<?php echo $i; ?>">
                                 <?php echo $item['donGia']; ?> VNĐ
                             </td>
                             <td>

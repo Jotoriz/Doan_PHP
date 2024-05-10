@@ -26,7 +26,7 @@ define('BASE_PATH', __DIR__);
                             $totalItemsInCart = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 
                             if ($totalItemsInCart > 0) {
-                                echo '<span class="badge badge-pill badge-danger">' . $totalItemsInCart . '</span>';
+                                echo '<span class="badge badge-pill badge-danger cart-badge">' . $totalItemsInCart . '</span>';
                             }
                             ?>
                         </a>

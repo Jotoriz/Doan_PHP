@@ -69,6 +69,11 @@ a {
     font-size: xx-large;
 
 }
+.cart-badge {
+    position: absolute;
+    top: 28px;
+    right: 53px;
+}
 .subHeader{
     margin-top: 10px;
     background-color: #FFB0BD;
