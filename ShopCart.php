@@ -50,28 +50,29 @@
             'SoLuong' => $sl
         );
 
-        // Kiểm tra nếu giỏ hàng không tồn tại, tạo mới
-        if (!isset($_SESSION['cart'])) {
-            $_SESSION['cart'] = array();
-        }
-
-        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa, nếu có thì tăng số lượng
-        $found = false;
-        foreach ($_SESSION['cart'] as $key => $item) {
-            if ($item['MaSP'] == $maSP) {
-                $_SESSION['cart'][$key]['SoLuong'] += $sl;
-                $found = true;
+        $flag=0;
+        $count = count($_SESSION['cart']);
+        for($i=0;$i<$count;$i++)
+        {
+            $item=$_SESSION['cart'][$i];
+            if($item["MaSP"]==$maSP)
+            {
+                $flag=1;
+                $sl_new=$sl+$item["SoLuong"];
+                $item["SoLuong"]=$sl_new;
+                $_SESSION['cart'][$i]=$item;
                 break;
             }
         }
-        if (!$found) {
-            $product = array(
+        if($flag == 0)
+        {
+            $sp=array(
                 'MaSP' => $maSP,
                 'TenSP' => $tenSP,
                 'Gia' => $gia,
                 'SoLuong' => $sl
             );
-            $_SESSION['cart'][] = $product;
+            $_SESSION['cart'][]=$sp;
         }
     }
 
@@ -109,28 +110,29 @@
         <?php } ?>
 
         <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) { ?>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th style="padding-left: 30px;">Sản phẩm</th>
-                        <th>Giá bán</th>
-                        <th>Số lượng</th>
-                        <th>Tổng tiền</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        $totalCounter = 0;
-                        $itemCounter = 0;
-                        foreach($_SESSION['cart'] as $i => $item) {
-                            $maSP = $item["MaSP"];
-                            $imgUrl = "image/SanPham/" . $maSP . ".jpg";
-                            
-                            $total = (float)$item["Gia"] * (int)$item["SoLuong"];
+            <form action="ShopCart.php" method="post">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="padding-left: 30px;">Sản phẩm</th>
+                            <th>Giá bán</th>
+                            <th>Số lượng</th>
+                            <th>Tổng tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            $totalCounter = 0;
+                            $itemCounter = 0;
+                            foreach($_SESSION['cart'] as $i => $item) {
+                                $maSP = $item["MaSP"];
+                                $imgUrl = "image/SanPham/" . $maSP . ".jpg";
+                                
+                                $total = (float)$item["Gia"] * (int)$item["SoLuong"];
 
-                            $totalCounter += $total;
-                            $itemCounter += $item["SoLuong"];
-                        ?>
+                                $totalCounter += $total;
+                                $itemCounter += $item["SoLuong"];
+                            ?>
                             <tr>
                                 <td>
                                     <input type="checkbox" name="deleteItem[]" value="<?php echo $i;?>" class="item-checkbox" onchange="updateTotal()"> <!-- Thêm onchange -->
@@ -158,28 +160,28 @@
 
                                 </td>
                             </tr>
-                        <?php } ?>
-                        <tr class="border-top border-bottom">
-            <td>
-                <form action="ShopCart.php" method="post">
-                    <input type="hidden" name="emptyCart" value="1">
-                    <button type="submit" class="btn btn-danger btn-custom-size">Xóa tất cả</button>
-                </form>
-            </td>
-            <td></td>
-            <td></td>
-            <td><strong id="totalPrice">0</strong></td>
-            <td>
-                <form action="ShopCart.php" method="post">
-                    <input type="hidden" name="delId" value="<?php echo $i; ?>">
-                    <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
-                </form>
-            </td>
-        </tr>
-
-
-                </tbody>
-            </table>
+                            <?php } ?>
+                            <tr class="border-top border-bottom">
+                                <td>
+                                    <form action="ShopCart.php" method="post">
+                                        <input type="hidden" name="emptyCart" value="1">
+                                        <button type="submit" class="btn btn-danger btn-custom-size">Xóa tất cả</button>
+                                    </form>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td><strong id="totalPrice">0</strong></td>
+                                <td>
+                                    <form action="ShopCart.php" method="post">
+                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
+                                        <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </form>
         <?php } ?>
     </div>
     <?php
@@ -200,24 +202,22 @@ function updateTotal() {
         var rowIndex = checkbox.value;
         var isChecked = checkbox.checked;
         if (isChecked) {
-            var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace('$', ''));
+            var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
             total += totalItem;
             countChecked++;
         }
     });
 
-    total = total.toFixed(3).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-
-    if (total.endsWith('.00')) {
-        total = total.slice(0, -3); 
-    }
+    // Thêm dấu phẩy ngăn cách hàng nghìn
+    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
 
     if (countChecked > 0) {
-        document.querySelector('#totalPrice').innerText = total + '.000 VNĐ';
+        document.querySelector('#totalPrice').innerText = total + ' VNĐ';
     } else {
         document.querySelector('#totalPrice').innerText = '0 VNĐ';
     }
 }
+
 </script>
 
 
