@@ -35,5 +35,5 @@ define('BASE_PATH', __DIR__);
             </div>
         </div>
     </div>
-
+    <script src="https://kit.fontawesome.com/d3f4e54f8d.js" crossorigin="anonymous"></script>
 </div>

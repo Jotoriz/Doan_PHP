@@ -21,3 +21,19 @@
     border: 2px solid #FFB0BD;
     padding: 0px;
 }
+.dd_mon {
+    width: 100%;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.dd_mon_image {
+    flex: 1;
+}
+
+.dd_mon_info {
+    padding: 10px;
+}

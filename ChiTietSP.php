@@ -17,6 +17,15 @@ $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 $tenSP = $row["TenSP"];
 $gia = $row["Gia"];
+
+
+$pdo2 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+$pdo2->exec("set names utf8");
+if(isset($_GET["id"])) { // Kiểm tra xem biến $_GET["id"] có tồn tại không
+    $maSP = $_GET["id"];
+    $sql5 = "select * from sanpham where masp =" . $maSP;
+    $sp = $pdo2->query($sql5);
+}
 ?>
 
 <head>
@@ -65,14 +74,19 @@ $gia = $row["Gia"];
             <div class='col'>
                 <h2><?php echo $tenSP; ?></h2>
                 <p>Giá: <?php echo $gia; ?></p>
-                <div class="quantity">
-                    <button class="decrement">-</button>
-                    <input type="text" id="quantity" name="quantity" min="1" value="1">
-                    <button class="increment">+</button>
-                </div>
+                
                 <div class="buttons">
-                    <button class="add-to-cart btn btn-primary">Thêm vào giỏ hàng</button>
-                    <button class="buy-now btn btn-primary">Mua ngay</button>
+                    <form action="ShopCart.php" method="POST">
+                        <input type="hidden" name="MaSP" value="<?php echo $maSP; ?>">
+                        <input type="hidden" name="TenSP" value="<?php echo $tenSP; ?>">
+                        <input type="hidden" name="Gia" value="<?php echo $gia; ?>">
+                        <input type="number" name="sl" value="1" min="1">
+                        <br></br>
+                        <button type="submit" name="add_to_cart" class="add-to-cart btn btn-primary">Thêm vào giỏ hàng</button>
+                        <button class="buy-now btn btn-primary">Mua ngay</button>
+                    </form>
+                    
+
                 </div>
             </div>
         </div>
