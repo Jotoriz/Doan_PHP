@@ -29,13 +29,14 @@
         array_splice($_SESSION['cart'], $_POST['delId'], 1);
     }
     //Update item trong giỏ
-    if (isset($_GET['updateId']) && ($_GET['updateId'] >= 0)) {
-        $index = $_GET['updateId'];
+    if (isset($_POST['updateItem'])) { // Sử dụng tên nút submit đã thay đổi
+        $index = $_POST['updateId'];
+        $new_quantity = $_POST['sl_'.$index]; // Lấy giá trị số lượng từ trường số lượng tương ứng
         if (isset($_SESSION['cart'][$index])) {
-            $new_quantity = $_GET['sl'];
             $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
         }
     }
+    
 
     if(isset($_POST['add_to_cart'])) {
         $maSP = $_POST['MaSP'];
@@ -143,12 +144,13 @@
                                     <?php echo number_format($item['Gia'], 0, ',', '.'); ?> VNĐ
                                 </td>
                                 <td>
-                                    <form action="ShopCart.php" method="get">
+                                    <form action="ShopCart.php" method="post"> <!-- Thay đổi phương thức thành POST -->
                                         <input type="hidden" name="updateId" value="<?php echo $i;?>">
-                                        <input type="number" name="sl" class="cart-qty-single" data-item="<?php echo $key;?>" value="<?php echo $item['SoLuong'];?>" min="1" max="1000">
-                                        <button type="submit" class="text-primary">Cập nhật</button>
+                                        <input type="number" name="sl_<?php echo $i;?>" class="cart-qty-single" value="<?php echo $item['SoLuong'];?>" min="1" max="1000"> <!-- Sử dụng tên trường số lượng khác nhau -->
+                                        <button type="submit" name="updateItem" class="text-primary">Cập nhật</button> <!-- Đổi tên nút submit để phân biệt -->
                                     </form>
                                 </td>
+
                                 <td id="total_<?php echo $i; ?>">
                                     <?php echo number_format($total, 0, ',', '.'); ?> VNĐ
                                 </td>
