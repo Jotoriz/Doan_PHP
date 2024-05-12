@@ -79,11 +79,15 @@
                             <a class="nav-link" href="ShopCart.php">
                                 <i class="fas fa-shopping-cart"></i>
                                     <?php
-                                    $totalItemsInCart = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+                                        if (session_status() == PHP_SESSION_NONE) {
+                                            
+                                            session_start();
+                                        }
+                                        $totalItemsInCart = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 
-                                    if ($totalItemsInCart > 0) {
-                                        echo '<span class="badge badge-pill badge-danger cart-badge">' . $totalItemsInCart . '</span>';
-                                    }
+                                        if ($totalItemsInCart > 0) {
+                                            echo '<span class="badge badge-pill badge-danger cart-badge">' . $totalItemsInCart . '</span>';
+                                        }
                                     ?>
                             </a>
                         </li>
