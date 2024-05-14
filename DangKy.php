@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="auth.css">
-    <link rel="stylesheet" href="DangKy.css">
+    <link rel="stylesheet" href="DangKys.css">
     <link rel="stylesheet" href="stylec.css">
     <title>Đăng Ký</title>
 </head>
@@ -41,24 +41,36 @@
             <form>
                 <div class="row form">
                     <div class="row">
-                        <input class="inputs" type="text" placeholder="Họ Và Tên (*)" />
+                        <div class="col">
+                            <input class="inputs" type="text" placeholder="Họ Và Tên (*)" />
+                        </div>
                     </div>
                     <div class="row">
-                        <input class="inputs" type="email" placeholder="Email (*)" />
+                        <div class="col">
+                            <input class="inputs" type="email" placeholder="Email (*)" />
+                        </div>
                     </div>
                     <div class="row">
-                        <input class="inputs" type="tel" placeholder="Số Điện Thoại (*)" />
+                        <div class="col">
+                            <input class="inputs" type="tel" placeholder="Số Điện Thoại (*)" />
+                        </div>
                     </div>
                     <div class="row">
-                        <input class="inputs" type="password" placeholder="Mật Khẩu (*)" />
+                        <div class="col">
+                            <input class="inputs" type="password" placeholder="Mật Khẩu (*)" />
+                        </div>
                     </div>
                     <div class="row">
-                        <input class="inputs" type="password" placeholder="Nhập Lại Mật Khẩu (*)" />
+                        <div class="col">
+                            <input class="inputs" type="password" placeholder="Nhập Lại Mật Khẩu (*)" />
+                        </div>
                     </div>
                 </div>
         </div>
         <div class="row">
-            <button class="submit" type="submit">Đăng Ký</button>
+            <div class="col">
+                <button class="submit" type="submit">Đăng Ký</button>
+            </div>
         </div>
         </form>
     </div>
