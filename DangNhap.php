@@ -14,10 +14,8 @@
 <body>
     <?php
     include "Header.php";
-
     include "SubHeader.php";
     ?>
-
 
     <div class="container auth">
         <div class="row">
@@ -36,27 +34,33 @@
                 </div>
             </div>
         </div>
-        <div class="row ">
-            <form>
+        <div class="row">
+            <form method="POST" action="login_handler.php">
                 <div class="row form">
                     <div class="row">
                         <div class="col">
-                            <input class="inputs" type="email" placeholder="Email" />
+                            <input id="email" class="inputs" type="email" name="email" placeholder="Email" required />
+                        </div>
+                        <div class="col">
+                            <input id="password" class="inputs" type="password" name="password" placeholder="Mật Khẩu"
+                                required />
+                            <?php
+                            if (isset($_GET['error']) && $_GET['error'] == 1) {
+                                echo '<p id="errorMessage" class="error">Email hoặc mật khẩu không đúng</p>';
+                            } else {
+                                echo '<p id="errorMessage" class="error"></p>';
+                            }
+                            ?>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <input class="inputs" type="password" placeholder="Mật Khẩu" />
+                            <button class="submit" type="submit">Đăng Nhập</button>
                         </div>
                     </div>
                 </div>
+            </form>
         </div>
-        <div class="row">
-            <div class="col">
-                <button class="submit" type="submit">Đăng Nhập</button>
-            </div>
-        </div>
-        </form>
     </div>
 
     <script src="Bootstrap/bootstrap.bundle.min.js"></script>

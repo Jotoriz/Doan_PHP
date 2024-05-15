@@ -53,3 +53,6 @@
 .input{
     border-radius: 8px;
 }
+.error{
+    color: red;
+}
