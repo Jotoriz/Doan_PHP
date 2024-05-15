@@ -50,7 +50,7 @@
             $kq = $sta->execute(array(':HoTen_KH' => $HoTen_KH)); 
 
             if($kq){
-                header("Location: KhachHang.php");
+                header("Location: QLKhachHang.php");
                 echo "Xóa thành công !";
             } else{
                 echo "Xóa thất bại !";
@@ -100,7 +100,7 @@
                         <td><?php echo $KH['SDT_KH']; ?></td>
                         <td><?php echo $KH['Email_KH']; ?></td>
                         <td>
-                        <form method="POST" action="SuaKH.php">
+                        <form method="POST" action="QLSuaKH.php">
                             <input type="hidden" name="hoten_KH" value="<?php echo $KH['HoTen_KH']; ?>">
                             <button type="submit" class="btn btn-primary" name="btn_Edit">Sửa</button>
                         </form>
