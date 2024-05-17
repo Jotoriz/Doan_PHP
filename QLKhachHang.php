@@ -1,6 +1,6 @@
 <?php
     // Tạo một kết nối PDO duy nhất
-    $pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
     $pdo->exec("set names utf8");
 
     //Truy vấn bảng Khách Hàng

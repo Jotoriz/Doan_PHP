@@ -11,7 +11,7 @@
 
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    
     <style>
         #menu {
             margin-top: 20px;
@@ -197,8 +197,5 @@
         }
     </script>
 </body>
-</html>      
-=======
 
 </html>
->>>>>>> 0050c301bc46aec029ca2a117cc879f40e872d1e
