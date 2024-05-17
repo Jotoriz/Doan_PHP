@@ -166,22 +166,22 @@
                 <span style="margin: 0 10px;">|</span>
                 <a href="DangKy.php" class="auth_link">Đăng Ký</a>
 
-                                        <li class="nav-item nav-link active giohang" id="cartItem">
-                            <a class="nav-link" href="ShopCart.php">
-                                <i class="fas fa-shopping-cart icons"></i>
-                                <?php
-                                if (session_status() == PHP_SESSION_NONE) {
+                <li class="nav-item nav-link active giohang" id="cartItem">
+                    <a class="nav-link" href="ShopCart.php">
+                        <i class="fas fa-shopping-cart icons"></i>
+                        <?php
+                        if (session_status() == PHP_SESSION_NONE) {
 
-                                    session_start();
-                                }
-                                $totalItemsInCart = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+                            session_start();
+                        }
+                        $totalItemsInCart = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 
-                                if ($totalItemsInCart > 0) {
-                                    echo '<span class="badge badge-pill badge-danger cart-badge">' . $totalItemsInCart . '</span>';
-                                }
-                                ?>
-                                                                </a>
-                                                            </li>
+                        if ($totalItemsInCart > 0) {
+                            echo '<span class="badge badge-pill badge-danger cart-badge">' . $totalItemsInCart . '</span>';
+                        }
+                        ?>
+                    </a>
+                </li>
                 `;
             }
 
