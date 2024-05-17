@@ -100,10 +100,10 @@ a {
     display: flex;
     justify-content: center;
 
-    margin-left: 10px;
+    margin-left: 30px;
     padding: 5px;
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     border-radius: 8px;
     cursor: pointer;
     transition: ease-in 0.3s;
@@ -128,4 +128,7 @@ a {
 }
 .card-img-top{
     height: 300px;
+}
+.icons{
+    font-size: x-large;
 }

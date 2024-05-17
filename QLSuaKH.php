@@ -1,6 +1,6 @@
 <?php
     // Kết nối đến cơ sở dữ liệu
-    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
     $pdo->exec("set names utf8");
 
     // Hàm sửa thông tin khách hàng
@@ -21,7 +21,7 @@
 
             // Kiểm tra và thông báo kết quả
             if($stmt->rowCount() > 0){
-                header("Location: KhachHang.php");
+                header("Location: QLKhachHang.php");
                 exit(); // Chắc chắn dừng việc thực thi mã PHP sau khi chuyển hướng
             } else {
                 echo "Không có thông tin nào được cập nhật !";
@@ -71,7 +71,7 @@
                 <!-- Thêm hidden input để chứa thông tin của khách hàng -->
                 <input type="hidden" name="hoten_KH" value="<?php echo $khachHang['HoTen_KH']; ?>">
                 <button type="submit" class="btn btn-primary" name="btn_Update">Cập nhật</button>
-                <a href="KhachHang.php" class="btn btn-danger">Hủy</a>
+                <a href="QLKhachHang.php" class="btn btn-danger">Hủy</a>
             </form>
             <?php include "Footer.php"; ?>
     </body>

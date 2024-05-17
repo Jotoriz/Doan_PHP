@@ -1,6 +1,6 @@
 <?php
     // Tạo một kết nối PDO duy nhất
-    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
     $pdo->exec("set names utf8");
 
     //Truy vấn bảng Khách Hàng
@@ -50,13 +50,41 @@
             $kq = $sta->execute(array(':HoTen_KH' => $HoTen_KH)); 
 
             if($kq){
-                header("Location: KhachHang.php");
+                header("Location: QLKhachHang.php");
                 echo "Xóa thành công !";
             } else{
                 echo "Xóa thất bại !";
             }
         }    
     }
+
+    // Hàm tìm kiếm khách hàng
+    function TimKiemKH($pdo, $keyword)
+    {
+        $searchQuery = "%$keyword%";
+
+        // Truy vấn tìm kiếm khách hàng theo họ tên và email
+        $sql = "SELECT * FROM KhachHang WHERE HoTen_KH LIKE :keyword OR Email_KH LIKE :keyword";
+
+        // Chuẩn bị và thực thi truy vấn
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':keyword', $searchQuery, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // Kiểm tra kết quả
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Trả về kết quả nếu có
+        } else {
+            return false; // Trả về false nếu không tìm thấy kết quả
+        }
+    }
+
+    // Lấy từ khóa tìm kiếm từ biến GET (hoặc POST)
+    $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+
+    // Gọi hàm tìm kiếm khách hàng với từ khóa vừa lấy được
+    $KhachHang = TimKiemKH($pdo, $keyword);
+
 
     // Xử lý hàm
     if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -81,6 +109,17 @@
 <?php include "SubHeader.php"; ?>
     <div class="container KhachHang">
         <h1 class="text-center">DANH SÁCH KHÁCH HÀNG</h1>
+
+        <div class="row mb-6">
+            <div class="col-md-6 offset-md-6">
+                <form method="GET" action="" class="d-flex justify-content-end">
+                    <input type="text" class="form-control mr-2" id="searchInput" name="keyword" placeholder="Tìm kiếm..." value="<?php echo htmlspecialchars($keyword); ?>">
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </form>
+            </div>
+        </div>
+
+
         <div class='row'>
         <table class="table table-bordered" align="center">
                 <thead class="thead-dark">
@@ -100,7 +139,7 @@
                         <td><?php echo $KH['SDT_KH']; ?></td>
                         <td><?php echo $KH['Email_KH']; ?></td>
                         <td>
-                        <form method="POST" action="SuaKH.php">
+                        <form method="POST" action="QLSuaKH.php">
                             <input type="hidden" name="hoten_KH" value="<?php echo $KH['HoTen_KH']; ?>">
                             <button type="submit" class="btn btn-primary" name="btn_Edit">Sửa</button>
                         </form>

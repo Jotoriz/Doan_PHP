@@ -50,3 +50,9 @@
     font-size: larger;
     background-color: #FFB0BD;
 }
+.input{
+    border-radius: 8px;
+}
+.error{
+    color: red;
+}
