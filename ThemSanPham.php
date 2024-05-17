@@ -124,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
                     if (!empty($_FILES[$field]['name'])) {
                         $tmp_name = $_FILES[$field]['tmp_name'];
                         $name = basename($_FILES[$field]['name']);
-                        $filePath = "$uploads_dir/$name";
+                        $filePath = "$name";
 
                         if (move_uploaded_file($tmp_name, $filePath)) {
                             // Chuẩn bị câu lệnh SQL INSERT cho hình ảnh
@@ -195,26 +195,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
             <div class="form-group">
                 <label for="hinhAnh1">Hình ảnh 1:</label>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="hinhAnh1" name="hinhAnh1">
+                    <input type="file" class="form-control-file" id="hinhAnh1" name="hinhAnh1">
                     <label class="custom-file-label" for="hinhAnh1">Chọn tệp</label>
                 </div>
             </div>
             <div class="form-group">
                 <label for="hinhAnh2">Hình ảnh 2:</label>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="hinhAnh2" name="hinhAnh2">
+                    <input type="file" class="form-control-file" id="hinhAnh2" name="hinhAnh2">
                     <label class="custom-file-label" for="hinhAnh2">Chọn tệp</label>
                 </div>
             </div>
             <div class="form-group">
                 <label for="hinhAnh3">Hình ảnh 3:</label>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="hinhAnh3" name="hinhAnh3">
+                    <input type="file" class="form-control-file" id="hinhAnh3" name="hinhAnh3">
                     <label class="custom-file-label" for="hinhAnh3">Chọn tệp</label>
                 </div>
             </div>
             <button type="submit" class="btn btn-add">Thêm</button>
-            <?php if (!isset($_POST['submitted'])): ?> <!-- Chỉ hiển thị trường ẩn khi form chưa được gửi đi -->
+            <?php if (!isset($_POST['submitted'])): ?> 
                 <input type="hidden" name="submitted" value="1">
             <?php endif; ?>
         </form>
@@ -222,3 +222,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
     <?php include "Footer.php"; ?>
 </body>
 </html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.form-control-file').forEach(input => {
+            input.addEventListener('change', function() {
+                let label = this.nextElementSibling;
+                label.textContent = this.files.length > 0 ? this.files[0].name : 'Chọn tệp';
+            });
+        });
+        
+        // Làm mới form sau khi gửi
+        document.getElementById('productForm').addEventListener('submit', function() {
+            this.reset();
+        });
+    });
+</script>
