@@ -119,6 +119,7 @@
                             <th>Giá bán</th>
                             <th>Số lượng</th>
                             <th>Tổng tiền</th>
+                            <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>

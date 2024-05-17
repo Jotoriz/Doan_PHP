@@ -122,7 +122,6 @@ table td:nth-child(8), table th:nth-child(8) { width: 30%; }
                 </tr>
             </thead>
             <tbody>
-                <!-- PHP code để lặp qua danh sách sản phẩm và hiển thị chúng -->
                 <?php foreach ($sanpham as $product): ?>
                     <tr>
                         <td><?php echo $product['MaSP']; ?></td>
@@ -150,8 +149,6 @@ table td:nth-child(8), table th:nth-child(8) { width: 30%; }
                 <?php endforeach; ?>
             </tbody>
         </table>
-
-        <!-- Button Thêm -->
         <form action="ThemSanPham.php" method="get">
             <button type="submit" class="btn-add">Thêm sản phẩm</button>
         </form>
