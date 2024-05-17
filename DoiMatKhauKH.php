@@ -95,3 +95,4 @@
         window.history.replaceState(null, null, window.location.href.split('&')[0]);
     }
 </script>
+<script src="Bootstrap/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

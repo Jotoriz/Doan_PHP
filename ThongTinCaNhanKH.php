@@ -86,3 +86,4 @@ $result = $query->fetch(PDO::FETCH_ASSOC);
 </body>
 
 </html>
+<script src="Bootstrap/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

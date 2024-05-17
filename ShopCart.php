@@ -193,6 +193,7 @@ if ($maSP) {
     <?php
     include "Footer.php";
     ?>
+    <script src="Bootstrap/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/d3f4e54f8d.js" crossorigin="anonymous"></script>
 </body>
 
