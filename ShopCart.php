@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <?php
-    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
     $pdo->query("set names utf8");
-
+    
     session_start();
     if(!isset($_SESSION['cart']))
     {
@@ -77,7 +77,7 @@
     $maSP = isset($_GET['id']) ? $_GET['id'] : null;
 
     if ($maSP) {
-        $pdo1 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+        $pdo1 = new PDO("mysql:host=localhost; dbname=ql_vanphongpham", "root", "");
         $pdo1->query("set names utf8");
 
         $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
@@ -174,8 +174,10 @@
                                 <td></td>
                                 <td><strong id="totalPrice">0</strong></td>
                                 <td>
-                                    <form action="ShopCart.php" method="post">
+                                    <form action="ThanhToan.php" method="post" onsubmit="return validateForm()">
                                         <input type="hidden" name="delId" value="<?php echo $i; ?>">
+
+                                        <input type="hidden" name="email" id="email">
                                         <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
                                     </form>
                                 </td>
@@ -195,31 +197,61 @@
 
 </html>
 <script>
-function updateTotal() {
-    var total = 0;
-    var countChecked = 0;
+    function updateTotal() {
+        var total = 0;
+        var countChecked = 0;
 
-    var checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        var checkboxes = document.querySelectorAll('.item-checkbox:checked');
 
-    checkboxes.forEach(function(checkbox) {
-        var rowIndex = checkbox.value;
-        var isChecked = checkbox.checked;
-        if (isChecked) {
-            var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
-            total += totalItem;
-            countChecked++;
-        }
-    });
+        checkboxes.forEach(function(checkbox) {
+            var rowIndex = checkbox.value;
+            var isChecked = checkbox.checked;
+            if (isChecked) {
+                var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
+                total += totalItem;
+                countChecked++;
+            }
+        });
 
+    //
     total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
 
-    if (countChecked > 0) {
-        document.querySelector('#totalPrice').innerText = total + ' VNĐ';
-    } else {
-        document.querySelector('#totalPrice').innerText = '0 VNĐ';
+        if (countChecked > 0) {
+            document.querySelector('#totalPrice').innerText = total + ' VNĐ';
+        } else {
+            document.querySelector('#totalPrice').innerText = '0 VNĐ';
+        }
     }
-}
 
+    function setEmailFromLocalStorage() {
+        if(localStorage.getItem('email')) {
+            
+            var email = localStorage.getItem('email');
+            
+            document.getElementById('email').value = email;
+        }
+    }
+
+    
+    function validateForm() {
+        var checkboxes = document.querySelectorAll('.item-checkbox');
+        var isChecked = false;
+
+        
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                isChecked = true;
+            }
+        });
+
+        if (!isChecked) {
+            alert("Vui lòng chọn ít nhất một mục để thanh toán.");
+            return false;
+        } else {
+            setEmailFromLocalStorage();
+            return true;
+        }
+    }
 </script>
 
 

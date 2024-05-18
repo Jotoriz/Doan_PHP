@@ -41,7 +41,7 @@
 <body>
 
     <?php
-    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
     $pdo->query("set names utf8");
     $sql = "SELECT * FROM loaisp";
     $loaiSPs = $pdo->query($sql);
@@ -49,10 +49,18 @@
     <div class="subHeader">
         <div class="container">
             <div class="row justify-content-center">
+                <div class="col-1 item">
+                    <a href="index.php">
+                        <img class="hinhsubHeader" src="image/LoaiSP/All.png" />
+                        <p>Tất Cả</p>
+                    </a>
+                </div>
                 <?php foreach ($loaiSPs as $loaiSP): ?>
-                    <div class="col-1_5 item">
-                        <img class="hinhsubHeader" src="image/LoaiSP/<?php echo $loaiSP['hinh']; ?>" />
-                        <p><?php echo $loaiSP['TenLoai']; ?></p>
+                    <div class="col-1 item">
+                        <a href="index.php?loaiSP=<?php echo $loaiSP['MaLoai']; ?>">
+                            <img class="hinhsubHeader" src="image/LoaiSP/<?php echo $loaiSP['hinh']; ?>" />
+                            <p><?php echo $loaiSP['TenLoai']; ?></p>
+                        </a>
                     </div>
                 <?php endforeach; ?>
             </div>

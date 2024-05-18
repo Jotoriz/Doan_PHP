@@ -28,15 +28,39 @@
                 $currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
                 $startIndex = ($currentPage - 1) * $productsPerPage;
 
-                $sql = "SELECT MaSP, TenSP, Gia
+                if (isset($_GET['loaiSP'])) {
+                    $loaiSP = $_GET['loaiSP'];
+                    $sql = "SELECT MaSP, TenSP, Gia
+                        FROM sanpham
+                        WHERE MaLoai = :loaiSP
+                        LIMIT :startIndex, :productsPerPage";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->bindValue(':loaiSP', $loaiSP, PDO::PARAM_INT);
+
+                    $countSql = "SELECT COUNT(*) as total
+                             FROM sanpham
+                             WHERE MaLoai = :loaiSP";
+                    $countStmt = $pdo->prepare($countSql);
+                    $countStmt->bindValue(':loaiSP', $loaiSP, PDO::PARAM_INT);
+                } else {
+                    $sql = "SELECT MaSP, TenSP, Gia
                         FROM sanpham
                         LIMIT :startIndex, :productsPerPage";
-                $stmt = $pdo->prepare($sql);
+                    $stmt = $pdo->prepare($sql);
+
+                    $countSql = "SELECT COUNT(*) as total
+                             FROM sanpham";
+                    $countStmt = $pdo->prepare($countSql);
+                }
+
                 $stmt->bindValue(':startIndex', $startIndex, PDO::PARAM_INT);
                 $stmt->bindValue(':productsPerPage', $productsPerPage, PDO::PARAM_INT);
                 $stmt->execute();
                 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+                $countStmt->execute();
+                $totalProducts = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+                $totalPages = ceil($totalProducts / $productsPerPage);
 
                 foreach ($products as $product) {
                     $productId = $product['MaSP'];
@@ -58,27 +82,28 @@
                 ?>
             </div>
 
-            <div class="row">
-                <div class="pagination col">
-                    <?php
-                    $sql = "SELECT COUNT(*) AS totalCount FROM sanpham";
-                    $stmt = $pdo->query($sql);
-                    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                    $totalCount = $result['totalCount'];
-                    $totalPages = ceil($totalCount / $productsPerPage);
-                    ?>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center" id="pagination">
-                            <?php for ($page = 1; $page <= $totalPages; $page++) { ?>
-                                <li class="page-item <?php echo ($page == $currentPage) ? 'active' : ''; ?>">
-                                    <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
-                                </li>
-                            <?php } ?>
-                        </ul>
-                    </nav>
+            <?php if (!isset($_GET['loaiSP'])) { ?>
+                <div class="row">
+                    <div class="pagination col">
+                        <?php
+                        $sql = "SELECT COUNT(*) AS totalCount FROM sanpham";
+                        $stmt = $pdo->query($sql);
+                        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                        $totalCount = $result['totalCount'];
+                        $totalPages = ceil($totalCount / $productsPerPage);
+                        ?>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center" id="pagination">
+                                <?php for ($page = 1; $page <= $totalPages; $page++) { ?>
+                                    <li class="page-item <?php echo ($page == $currentPage) ? 'active' : ''; ?>">
+                                        <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
-
-            </div>
+            <?php } ?>
         </div>
 
     </div>
