@@ -137,7 +137,9 @@
                             ?>
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="deleteItem[]" value="<?php echo $i;?>" class="item-checkbox" onchange="updateTotal()"> <!-- Thêm onchange -->
+                                    <!-- <input type="checkbox" name="deleteItem[]" value="<?php echo $item['MaSP'];?>" class="item-checkbox" onchange="updateTotal()"> -->
+
+                                    <input type="checkbox" name="deleteItem[]" value="<?php echo $i;?>" class="item-checkbox" onchange="updateTotal()">
                                     <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;"><?php echo $item['TenSP'];?>
                                     
                                 </td>
@@ -179,12 +181,19 @@
                                 <td></td>
                                 <td><strong id="totalPrice">0</strong></td>
                                 <td>
-                                    <form action="ThanhToan.php" method="post" onsubmit="return validateForm()">
-                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
-
+                                    <form action="ThanhToan.php" method="post" onsubmit="setDataFromLocalStorage()">
                                         <input type="hidden" name="email" id="email">
-                                        <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
-                                    </form>
+                                        <input type="hidden" name="selected_products" id="selected_products">
+                                        <?php
+                                            // Tạo các trường ẩn cho số thứ tự của từng sản phẩm trong giỏ hàng
+                                            foreach ($_SESSION['cart'] as $i => $item) {
+                                                // Bổ sung thông tin về số lượng của từng sản phẩm
+                                                echo '<input type="hidden" name="selected_products[' . $item['MaSP'] . '][maSP]" value="' . $item['MaSP'] . '">';
+                                                echo '<input type="hidden" name="selected_products[' . $item['MaSP'] . '][soLuong]" value="' . $item['SoLuong'] . '">';
+                                            }
+                                        ?>
+                                        <button type="submit" class="btn btn-danger btn-custom-size">Thanh toán</button>
+                                    </form> 
                                 </td>
                             </tr>
                         
@@ -228,37 +237,14 @@
         }
     }
 
-    // Hàm để lấy email từ LocalStorage và đặt vào trường input
-    function setEmailFromLocalStorage() {
+    // Hàm để lấy dữ liệu từ LocalStorage và đặt vào các trường input
+    function setDataFromLocalStorage() {
         // Kiểm tra xem LocalStorage có chứa dữ liệu email hay không
         if(localStorage.getItem('email')) {
             // Lấy dữ liệu email từ LocalStorage
             var email = localStorage.getItem('email');
             // Đặt giá trị email vào trường input
             document.getElementById('email').value = email;
-        }
-    }
-
-    // Hàm để kiểm tra xem ít nhất một checkbox đã được chọn hay chưa
-    function validateForm() {
-        var checkboxes = document.querySelectorAll('.item-checkbox');
-        var isChecked = false;
-
-        // Lặp qua tất cả các checkbox và kiểm tra xem có ít nhất một checkbox nào được chọn hay không
-        checkboxes.forEach(function(checkbox) {
-            if (checkbox.checked) {
-                isChecked = true;
-            }
-        });
-
-        // Nếu không có checkbox nào được chọn, hiển thị thông báo và ngăn chặn gửi form
-        if (!isChecked) {
-            alert("Vui lòng chọn ít nhất một mục để thanh toán.");
-            return false; // Ngăn chặn gửi form
-        } else {
-            // Nếu có ít nhất một checkbox được chọn, đặt email từ LocalStorage vào trường input
-            setEmailFromLocalStorage(); // Gọi hàm setEmailFromLocalStorage để đặt email từ LocalStorage vào trường input
-            return true; // Cho phép gửi form nếu có ít nhất một checkbox được chọn và email đã được đặt
         }
     }
 </script>
