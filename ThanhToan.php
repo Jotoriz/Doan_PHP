@@ -8,7 +8,7 @@
         if(isset($_POST['email']) && !empty($_POST['email'])) {
 
             // Kết nối đến cơ sở dữ liệu
-            $pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
+            $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
             $pdo->exec("set names utf8");
             
             // Lấy email từ form
