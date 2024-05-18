@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-$pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+$pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
 $pdo->exec("set names utf8");
 
 $id = $_GET['id'];
@@ -18,7 +18,7 @@ $tenSP = $row["TenSP"];
 $gia = $row["Gia"];
 
 
-$pdo2 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+$pdo2 = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
 $pdo2->exec("set names utf8");
 if (isset($_GET["id"])) {
     $maSP = $_GET["id"];

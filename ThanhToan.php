@@ -1,24 +1,18 @@
 <?php
 
     session_start();
-    // Kiểm tra yêu cầu là POST
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        // Kiểm tra xem email được gửi từ form và không rỗng
         if(isset($_POST['email']) && !empty($_POST['email'])) {
 
-            // Kết nối đến cơ sở dữ liệu
             $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
             $pdo->exec("set names utf8");
             
-            // Lấy email từ form
             $email = $_POST['email'];
 
-            // Truy vấn để lấy thông tin khách hàng từ cơ sở dữ liệu
             $sql = "SELECT HoTen_KH, DiaChi_KH, SDT_KH, Email_KH FROM KhachHang WHERE Email_KH = :Email_KH";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(array(':Email_KH' => $email));
-            // Lấy thông tin khách hàng từ kết quả của truy vấn
             $khachHang = $stmt->fetch(PDO::FETCH_ASSOC);
         }
     }
@@ -27,40 +21,40 @@
     {
         $tongTien = 0;
 
-        // Kiểm tra xem $selected_products có phải là một mảng hay không
         if (is_array($selected_products)) {
             foreach ($selected_products as $product) {
-                // Lấy thông tin sản phẩm từ cơ sở dữ liệu dựa trên mã sản phẩm
+
                 $stmt = $pdo->prepare("SELECT TenSP, Gia FROM SanPham WHERE MaSP = :MaSP");
-                $stmt->execute(array(':MaSP' => $product['maSP'])); // Sửa đổi ở đây
+                $stmt->execute(array(':MaSP' => $product['maSP']));
                 $product_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                // Hiển thị thông tin sản phẩm
                 if ($product_info) {
                     echo '<tr>';
-                    echo '<td>' . htmlspecialchars($product_info['TenSP']) . '</td>'; // Tên sản phẩm
-                    echo '<td>' . number_format($product_info['Gia'], 0, ',', '.') . ' VNĐ</td>'; // Giá sản phẩm
-                    echo '<td>' . $product['soLuong'] . '</td>'; // Số lượng sản phẩm
+
+                    $image = isset($product['image']) ? $product['image'] : 'default.jpg';
+                    echo '<td><img src="' . htmlspecialchars($image) . '" alt="Product Image" style="width: 50px; height: 50px;"></td>';
+
+                    echo '<td>' . htmlspecialchars($product_info['TenSP']) . '</td>';
+                    
+                    echo '<td>' . number_format($product_info['Gia'], 0, ',', '.') . ' VNĐ</td>';
+
+                    echo '<td>' . htmlspecialchars($product['soLuong']) . '</td>';
+
                     echo '<td>' . number_format($product_info['Gia'] * $product['soLuong'], 0, ',', '.') . ' VNĐ</td>';
                     echo '</tr>';
 
-                    // Cập nhật tổng tiền
                     $tongTien += $product_info['Gia'] * $product['soLuong'];
                 }
             }
         } else {
-            // Nếu $selected_products không phải là mảng, hiển thị thông báo lỗi
             echo "Dữ liệu không hợp lệ";
         }
 
-        // Hiển thị tổng tiền
         echo '<tr>';
-        echo '<td colspan="3" class="text-right"><strong>Tổng tiền:</strong></td>';
+        echo '<td colspan="5" class="text-right"><strong>Tổng tiền:</strong></td>';
         echo '<td><strong>' . number_format($tongTien, 0, ',', '.') . ' VNĐ</strong></td>';
         echo '</tr>';
     }
-
-
 ?>
 
 
@@ -80,10 +74,11 @@
     ?>
     
     <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>Thông tin khách hàng:</h2>
-                <form method="POST" action=""> <!-- Thêm method và action để gửi dữ liệu form qua POST -->
+        <form method="POST" action="XacNhan.php">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Thông tin khách hàng -->
+                    <h2>Thông tin khách hàng:</h2>
                     <div class="form-group">
                         <label for="hoTen">Họ và tên:</label>
                         <input type="text" class="form-control" id="hoTen" name="hoTen" value="<?php echo htmlspecialchars($khachHang['HoTen_KH']); ?>" readonly>
@@ -106,40 +101,41 @@
                             <input class="form-check-input" type="radio" name="thanhToan" id="COD" value="COD" checked disabled>
                             <label class="form-check-label" for="COD">Thanh toán khi giao hàng (COD)</label>
                         </div>
-                    </div>
-                </form>
+                    </div>     
+                </div>
+                <div class="col-md-6">
+                    <!-- Giỏ hàng -->
+                    <h2>Giỏ hàng:</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Hình ảnh</th>
+                                <th scope="col">Sản phẩm</th>
+                                <th scope="col">Giá</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                if (isset($_POST['selected_products']) && is_array($_POST['selected_products'])) {
+                                    HienThiThongTinSanPham($_POST['selected_products'], $pdo);
+                                } else {
+                                    echo "<tr><td colspan='5'>Không có sản phẩm nào được chọn.</td></tr>";
+                                }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="col-md-6">
-                <h2>Giỏ hàng</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Sản phẩm</th>
-                            <th scope="col">Giá</th>
-                            <th scope="col">Số lượng</th>
-                            <th scope="col">Thành tiền</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-
-                            // Kiểm tra xem form đã được gửi đi chưa và dữ liệu được truyền dưới dạng mảng
-                            if (isset($_POST['selected_products']) && is_array($_POST['selected_products'])) {
-                                // Gọi hàm hiển thị thông tin sản phẩm và truyền mảng sản phẩm trực tiếp vào
-                                HienThiThongTinSanPham($_POST['selected_products'], $pdo);
-                            } else {
-                                echo "<tr><td colspan='4'>Không có sản phẩm nào được chọn.</td></tr>";
-                            }
-                        ?>
-                    </tbody>
-                </table>
-                <form action="XacNhan.php" method="post" class="float-right">
-                    <!-- Input ẩn để gửi thông tin sản phẩm -->
-                    <input type="hidden" name="selected_products" value="<?php echo htmlspecialchars(json_encode($_POST['selected_products'])); ?>">
-                    <button type="submit" class="btn btn-success">Xác nhận đơn hàng</button>
-                </form>
+            <!-- Nút Xác nhận đơn hàng -->
+            <div class="row">
+                <div class="col-md-6 offset-md-6">
+                    <input type="hidden" name="selected_products" value='<?php echo json_encode($_POST['selected_products']); ?>'>
+                    <button type="submit" class="btn btn-success float-right">Xác nhận đơn hàng</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 
     <?php

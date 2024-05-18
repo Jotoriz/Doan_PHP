@@ -178,15 +178,17 @@
                                         <input type="hidden" name="email" id="email">
                                         <input type="hidden" name="selected_products" id="selected_products">
                                         <?php
-                                            // Tạo các trường ẩn cho số thứ tự của từng sản phẩm trong giỏ hàng
                                             foreach ($_SESSION['cart'] as $i => $item) {
-                                                // Bổ sung thông tin về số lượng của từng sản phẩm
-                                                echo '<input type="hidden" name="selected_products[' . $item['MaSP'] . '][maSP]" value="' . $item['MaSP'] . '">';
-                                                echo '<input type="hidden" name="selected_products[' . $item['MaSP'] . '][soLuong]" value="' . $item['SoLuong'] . '">';
+                                                $maSP = htmlspecialchars($item['MaSP']);
+                                                $imgUrl = "image/SanPham/" . $maSP . ".jpg";
+
+                                                echo '<input type="hidden" name="selected_products[' . $maSP . '][image]" value="' . htmlspecialchars($imgUrl) . '">';
+                                                echo '<input type="hidden" name="selected_products[' . $maSP . '][maSP]" value="' . $maSP . '">';
+                                                echo '<input type="hidden" name="selected_products[' . $maSP . '][soLuong]" value="' . htmlspecialchars($item['SoLuong']) . '">';
                                             }
                                         ?>
                                         <button type="submit" class="btn btn-danger btn-custom-size">Thanh toán</button>
-                                    </form> 
+                                    </form>
                                 </td>
                             </tr>
                         
@@ -230,9 +232,7 @@
         }
     }
 
-    // Hàm để lấy email từ LocalStorage và đặt vào trường input
     function setEmailFromLocalStorage() {
-        // Kiểm tra xem LocalStorage có chứa dữ liệu email hay không
         if(localStorage.getItem('email')) {
             
             var email = localStorage.getItem('email');
@@ -240,13 +240,10 @@
             document.getElementById('email').value = email;
         }
     }
-     // Hàm để lấy dữ liệu từ LocalStorage và đặt vào các trường input
+
      function setDataFromLocalStorage() {
-        // Kiểm tra xem LocalStorage có chứa dữ liệu email hay không
         if(localStorage.getItem('email')) {
-            // Lấy dữ liệu email từ LocalStorage
             var email = localStorage.getItem('email');
-            // Đặt giá trị email vào trường input
             document.getElementById('email').value = email;
         }
     }
