@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sửa Sản phẩm</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="stylec.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <style>
     /* Custom styles for form elements */
@@ -58,109 +59,109 @@
     }
 </style>
 <?php
-    session_start();
-
     $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->query("set names utf8");
-    $sqlNCC = "SELECT MaNCC, TenNCC FROM nhacungcap";
-    $ncc = $pdo->query($sqlNCC);
 
-    $sqlLoai = "SELECT MaLoai, TenLoai FROM loaisp";
-    $loai = $pdo->query($sqlLoai);
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $maSanPham = $_POST['maSanPham'];
+        $maLoai = $_POST['maLoai'];
+        $maNCC = $_POST['maNCC'];
+        $tenSanPham = $_POST['tenSanPham'];
+        $gia = $_POST['gia'];
+        $donViTinh = $_POST['donViTinh'];
+        $soLuongTonKho = $_POST['soLuongTonKho'];
+        $moTa = $_POST['moTa'];
 
-    // Kiểm tra xem có ID sản phẩm được truyền từ trang trước không
-    if(isset($_GET['id']) && !empty($_GET['id'])) {
-        $id = $_GET['id'];
-        
-        // Truy vấn để lấy thông tin sản phẩm cần sửa từ ID
-        $sql = "SELECT * FROM sanpham WHERE MaSP = :id";
+        $sql = "UPDATE sanpham SET MaLoai = :maLoai, MaNCC = :maNCC, TenSP = :tenSanPham, Gia = :gia, DVT = :donViTinh, SoLuongTonKho = :soLuongTonKho, MoTaSP = :moTa WHERE MaSP = :maSanPham";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->bindParam(':maSanPham', $maSanPham);
+        $stmt->bindParam(':maLoai', $maLoai);
+        $stmt->bindParam(':maNCC', $maNCC);
+        $stmt->bindParam(':tenSanPham', $tenSanPham);
+        $stmt->bindParam(':gia', $gia);
+        $stmt->bindParam(':donViTinh', $donViTinh);
+        $stmt->bindParam(':soLuongTonKho', $soLuongTonKho);
+        $stmt->bindParam(':moTa', $moTa);
 
-        if(!$product) {
-            echo "Không tìm thấy sản phẩm.";
-            exit;
-        }
-
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Lấy dữ liệu từ biểu mẫu sửa sản phẩm
-            $tenSP = $_POST['tenSP'];
-            $gia = $_POST['gia'];
-            $dvt = $_POST['dvt'];
-            $soLuongTonKho = $_POST['soLuongTonKho'];
-            $moTaSP = $_POST['moTaSP'];
-            $maNCC = $_POST['maNCC'];
-            $maLoai = $_POST['maLoai'];
-
-            // Cập nhật thông tin sản phẩm trong cơ sở dữ liệu
-            $sqlUpdate = "UPDATE sanpham SET TenSP = :tenSP, Gia = :gia, DVT = :dvt, SoLuongTonKho = :soLuongTonKho, MoTaSP = :moTaSP, MaNCC = :maNCC, MaLoai = :maLoai WHERE MaSP = :id";
-            $stmt = $pdo->prepare($sqlUpdate);
-            $stmt->bindParam(':tenSP', $tenSP);
-            $stmt->bindParam(':gia', $gia);
-            $stmt->bindParam(':dvt', $dvt);
-            $stmt->bindParam(':soLuongTonKho', $soLuongTonKho);
-            $stmt->bindParam(':moTaSP', $moTaSP);
-            $stmt->bindParam(':maNCC', $maNCC);
-            $stmt->bindParam(':maLoai', $maLoai);
-            $stmt->bindParam(':id', $id);
-            if($stmt->execute()) {
-                echo "Cập nhật sản phẩm thành công.";
-            } else {
-                echo "Lỗi khi cập nhật sản phẩm.";
-            }
+        if ($stmt->execute()) {
+            echo '<div class="alert alert-success" role="alert">Cập nhật sản phẩm thành công!</div>';
+        } else {
+            echo '<div class="alert alert-danger" role="alert">Cập nhật sản phẩm thất bại. Vui lòng thử lại!</div>';
         }
     } else {
-        echo "Không có ID sản phẩm được cung cấp.";
-        exit;
+        $maSanPham = $_GET['maSanPham'];
+        $sql = "SELECT * FROM sanpham WHERE MaSP = :maSanPham";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':maSanPham', $maSanPham);
+        $stmt->execute();
+        $product = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch as associative array
+
+        if ($product === false) {
+            echo '<div class="alert alert-danger" role="alert">Không tìm thấy sản phẩm với mã này.</div>';
+            die(); // Stop further processing if product is not found
+        }
+
+        $sqlNCC = "SELECT MaNCC, TenNCC FROM nhacungcap";
+        $ncc = $pdo->query($sqlNCC);
+
+        $sqlLoai = "SELECT MaLoai, TenLoai FROM loaisp";
+        $loai = $pdo->query($sqlLoai);
     }
 ?>
+
 <body>
-<?php
+    <?php
     include "Header.php";
 
     include "SubHeader.php";
     ?>
     <div class="container mt-5">
-        <h1 align="center">Sửa sản phẩm</h2>
-        <form method="post">
-            <input type="hidden" name="id" value="<?php echo $id; ?>">
-            <label for="tenSP">Tên sản phẩm:</label><br>
-            <input type="text" id="tenSP" name="tenSP" value="<?php echo $product['TenSP']; ?>"><br>
-            <label for="gia">Giá:</label><br>
-            <input type="text" id="gia" name="gia" value="<?php echo $product['Gia']; ?>"><br>
-            <label for="dvt">Đơn vị tính:</label><br>
-            <input type="text" id="dvt" name="dvt" value="<?php echo $product['DVT']; ?>"><br>
-            <label for="soLuongTonKho">Số lượng tồn kho:</label><br>
-            <input type="text" id="soLuongTonKho" name="soLuongTonKho" value="<?php echo $product['SoLuongTonKho']; ?>"><br>
-            <label for="moTaSP">Mô tả:</label><br>
-            <textarea id="moTaSP" name="moTaSP"><?php echo $product['MoTaSP']; ?></textarea><br><br>
-
-            <label for="maNCC">Mã nhà cung cấp:</label><br>
-            <select id="maNCC" name="maNCC">
-                <?php foreach ($ncc as $ncc): ?>
-                    <option value="<?php echo $ncc['TenNCC']; ?>"<?php if ($ncc['MaNCC'] == $product['MaNCC']) echo " selected"; ?>>
-                        <?php echo $ncc['TenNCC']; ?>
-                    </option>
-                <?php endforeach; ?>
-            </select><br>
-
-            <label for="maLoai">Mã loại:</label><br>
-            <select id="maLoai" name="maLoai">
-                <?php foreach ($loai as $loai): ?>
-                    <option value="<?php echo $loai['TenLoai']; ?>"<?php if ($loai['MaLoai'] == $product['MaLoai']) echo " selected"; ?>>
-                        <?php echo $loai['TenLoai']; ?>
-                    </option>
-                <?php endforeach; ?>
-            </select><br>
-
-            <input type="submit" value="Cập nhật">
+        <h1>Sửa Sản phẩm</h1>
+        <form action="SuaSanPham.php" method="POST">
+            <input type="hidden" name="maSanPham" value="<?php echo $product['MaSP']; ?>">
+            <div class="form-group">
+                <label for="tenSanPham">Tên Sản phẩm:</label>
+                <input type="text" class="form-control" id="tenSanPham" name="tenSanPham" value="<?php echo $product['TenSP']; ?>">
+            </div>
+            <div class="form-group">
+                <label for="gia">Giá:</label>
+                <input type="text" class="form-control" id="gia" name="gia" value="<?php echo $product['Gia']; ?>">
+            </div>
+            <div class="form-group">
+                <label for="donViTinh">Đơn vị tính:</label>
+                <input type="text" class="form-control" id="donViTinh" name="donViTinh" value="<?php echo $product['DVT']; ?>">
+            </div>
+            <div class="form-group">
+                <label for="soLuongTonKho">Số lượng tồn kho:</label>
+                <input type="text" class="form-control" id="soLuongTonKho" name="soLuongTonKho" value="<?php echo $product['SoLuongTonKho']; ?>">
+            </div>
+            <div class="form-group">
+                <label for="moTa">Mô tả:</label>
+                <textarea class="form-control" id="moTa" name="moTa"><?php echo $product['MoTaSP']; ?></textarea>
+            </div>
+            <div class="form-group">
+                <label for="maLoai">Loại:</label>
+                <select class="form-control" id="maLoai" name="maLoai">
+                    <?php foreach ($loai as $category): ?>
+                        <option value="<?php echo $category['MaLoai']; ?>" <?php if ($category['MaLoai'] == $product['MaLoai']) echo 'selected'; ?>><?php echo $category['TenLoai']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="maNCC">Nhà cung cấp:</label>
+                <select class="form-control" id="maNCC" name="maNCC">
+                    <?php foreach ($ncc as $supplier): ?>
+                        <option value="<?php echo $supplier['MaNCC']; ?>" <?php if ($supplier['MaNCC'] == $product['MaNCC']) echo 'selected'; ?>><?php echo $supplier['TenNCC']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu</button>
         </form>
     </div>
     <?php
     include "Footer.php";
-    ?>
-    
+    ?>    
 </body>
+
 </html>

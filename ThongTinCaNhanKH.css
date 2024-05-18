@@ -1,0 +1,73 @@
+    body {
+        background-color: #f2f2f2;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .auth {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .swich {
+        margin-bottom: 20px;
+    }
+
+    .au {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .form {
+        margin-top: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .in {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .submit {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .submit:hover {
+        background-color: #FFB0BD;
+    }
+
+    .footer {
+        margin-top: 50px;
+        text-align: center;
+        color: #888;
+    }
+    .Email_KH {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        background-color: #f2f2f2;
+        cursor: default;
+    }
+    .error{
+        color: red;
+    }

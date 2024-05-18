@@ -6,88 +6,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tất cả</title>
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="stylec.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <?php
-    $pdo = new PDO("mysql:host=localhost;dbname=ql_nha_hang", "root", "");
-    $pdo->query("set names utf8");
+$pdo = new PDO("mysql:host=localhost;dbname=ql_nha_hang", "root", "");
+$pdo->query("set names utf8");
 
-    $sqlLoaiMon = "select * from loai_mon_an";
-    $loai_mon = $pdo->query($sqlLoaiMon);
-    //Giỏ hàng
-    session_start();
-    if(!isset($_SESSION['cart']))
-    {
-        $_SESSION['cart']=[];
+$sqlLoaiMon = "select * from loai_mon_an";
+$loai_mon = $pdo->query($sqlLoaiMon);
+//Giỏ hàng
+session_start();
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+//Xóa ALL giỏ hàng
+if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
+    unset($_SESSION['cart']);
+}
+//Xóa item trong giỏ
+if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
+    array_splice($_SESSION['cart'], $_POST['delId'], 1);
+}
+//Update item trong giỏ
+if (isset($_POST['updateItem'])) { // Sử dụng tên nút submit đã thay đổi
+    $index = $_POST['updateId'];
+    $new_quantity = $_POST['sl_' . $index]; // Lấy giá trị số lượng từ trường số lượng tương ứng
+    if (isset($_SESSION['cart'][$index])) {
+        $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
     }
-    //Xóa ALL giỏ hàng
-    if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
-        unset($_SESSION['cart']);
-    }
-    //Xóa item trong giỏ
-    if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
-        array_splice($_SESSION['cart'], $_POST['delId'], 1);
-    }
-    //Update item trong giỏ
-    if (isset($_POST['updateItem'])) { // Sử dụng tên nút submit đã thay đổi
-        $index = $_POST['updateId'];
-        $new_quantity = $_POST['sl_'.$index]; // Lấy giá trị số lượng từ trường số lượng tương ứng
-        if (isset($_SESSION['cart'][$index])) {
-            $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
+}
+
+
+if (isset($_POST['add_to_cart'])) {
+    $maSP = $_POST['MaSP'];
+    $tenSP = $_POST['TenSP'];
+    $gia = $_POST['Gia'];
+    $sl = $_POST['sl'];
+
+    $product = array(
+        'MaSP' => $maSP,
+        'TenSP' => $tenSP,
+        'Gia' => $gia,
+        'SoLuong' => $sl
+    );
+
+    $flag = 0;
+    $count = count($_SESSION['cart']);
+    for ($i = 0; $i < $count; $i++) {
+        $item = $_SESSION['cart'][$i];
+        if ($item["MaSP"] == $maSP) {
+            $flag = 1;
+            $sl_new = $sl + $item["SoLuong"];
+            $item["SoLuong"] = $sl_new;
+            $_SESSION['cart'][$i] = $item;
+            break;
         }
     }
-    
-
-    if(isset($_POST['add_to_cart'])) {
-        $maSP = $_POST['MaSP'];
-        $tenSP = $_POST['TenSP'];
-        $gia = $_POST['Gia'];
-        $sl = $_POST['sl'];
-
-        $product = array(
+    if ($flag == 0) {
+        $sp = array(
             'MaSP' => $maSP,
             'TenSP' => $tenSP,
             'Gia' => $gia,
             'SoLuong' => $sl
         );
-
-        $flag=0;
-        $count = count($_SESSION['cart']);
-        for($i=0;$i<$count;$i++)
-        {
-            $item=$_SESSION['cart'][$i];
-            if($item["MaSP"]==$maSP)
-            {
-                $flag=1;
-                $sl_new=$sl+$item["SoLuong"];
-                $item["SoLuong"]=$sl_new;
-                $_SESSION['cart'][$i]=$item;
-                break;
-            }
-        }
-        if($flag == 0)
-        {
-            $sp=array(
-                'MaSP' => $maSP,
-                'TenSP' => $tenSP,
-                'Gia' => $gia,
-                'SoLuong' => $sl
-            );
-            $_SESSION['cart'][]=$sp;
-        }
+        $_SESSION['cart'][] = $sp;
     }
+}
 
-    $maSP = isset($_GET['id']) ? $_GET['id'] : null;
+$maSP = isset($_GET['id']) ? $_GET['id'] : null;
 
-    if ($maSP) {
-        $pdo1 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
-        $pdo1->query("set names utf8");
+if ($maSP) {
+    $pdo1 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+    $pdo1->query("set names utf8");
 
-        $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
-        $hinh = $pdo1->query($sqlHinh)->fetch(PDO::FETCH_ASSOC);
-        $imgUrl = $hinh['Hinh'];
-    }
-    
+    $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
+    $hinh = $pdo1->query($sqlHinh)->fetch(PDO::FETCH_ASSOC);
+    $imgUrl = $hinh['Hinh'];
+}
+
 ?>
 
 <body>
@@ -124,31 +120,36 @@
                     </thead>
                     <tbody>
                         <?php
-                            $totalCounter = 0;
-                            $itemCounter = 0;
-                            foreach($_SESSION['cart'] as $i => $item) {
-                                $maSP = $item["MaSP"];
-                                $imgUrl = "image/SanPham/" . $maSP . ".jpg";
-                                
-                                $total = (float)$item["Gia"] * (int)$item["SoLuong"];
+                        $totalCounter = 0;
+                        $itemCounter = 0;
+                        foreach ($_SESSION['cart'] as $i => $item) {
+                            $maSP = $item["MaSP"];
+                            $imgUrl = "image/SanPham/" . $maSP . ".jpg";
 
-                                $totalCounter += $total;
-                                $itemCounter += $item["SoLuong"];
+                            $total = (float) $item["Gia"] * (int) $item["SoLuong"];
+
+                            $totalCounter += $total;
+                            $itemCounter += $item["SoLuong"];
                             ?>
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="deleteItem[]" value="<?php echo $i;?>" class="item-checkbox" onchange="updateTotal()"> <!-- Thêm onchange -->
-                                    <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;"><?php echo $item['TenSP'];?>
-                                    
+                                    <input type="checkbox" name="deleteItem[]" value="<?php echo $i; ?>" class="item-checkbox"
+                                        onchange="updateTotal()"> <!-- Thêm onchange -->
+                                    <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2"
+                                        style="width:60px;"><?php echo $item['TenSP']; ?>
+
                                 </td>
                                 <td id="price_<?php echo $i; ?>"> <!-- Thêm id cho mỗi giá -->
                                     <?php echo number_format($item['Gia'], 0, ',', '.'); ?> VNĐ
                                 </td>
                                 <td>
                                     <form action="ShopCart.php" method="post"> <!-- Thay đổi phương thức thành POST -->
-                                        <input type="hidden" name="updateId" value="<?php echo $i;?>">
-                                        <input type="number" name="sl_<?php echo $i;?>" class="cart-qty-single" value="<?php echo $item['SoLuong'];?>" min="1" max="1000"> <!-- Sử dụng tên trường số lượng khác nhau -->
-                                        <button type="submit" name="updateItem" class="text-primary">Cập nhật</button> <!-- Đổi tên nút submit để phân biệt -->
+                                        <input type="hidden" name="updateId" value="<?php echo $i; ?>">
+                                        <input type="number" name="sl_<?php echo $i; ?>" class="cart-qty-single"
+                                            value="<?php echo $item['SoLuong']; ?>" min="1" max="1000">
+                                        <!-- Sử dụng tên trường số lượng khác nhau -->
+                                        <button type="submit" name="updateItem" class="text-primary">Cập nhật</button>
+                                        <!-- Đổi tên nút submit để phân biệt -->
                                     </form>
                                 </td>
 
@@ -156,32 +157,34 @@
                                     <?php echo number_format($total, 0, ',', '.'); ?> VNĐ
                                 </td>
                                 <td>
-                                <form action="ShopCart.php" method="post">
-                                    <input type="hidden" name="delId" value="<?php echo $i;?>">
-                                    <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size" >Xóa</button>
-                                </form>
+                                    <form action="ShopCart.php" method="post">
+                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
+                                        <button type="submit" name="deleteItem"
+                                            class="btn btn-danger btn-custom-size">Xóa</button>
+                                    </form>
 
                                 </td>
                             </tr>
-                            <?php } ?>
-                            <tr class="border-top border-bottom">
-                                <td>
-                                    <form action="ShopCart.php" method="post">
-                                        <input type="hidden" name="emptyCart" value="1">
-                                        <button type="submit" class="btn btn-danger btn-custom-size">Xóa tất cả</button>
-                                    </form>
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td><strong id="totalPrice">0</strong></td>
-                                <td>
-                                    <form action="ShopCart.php" method="post">
-                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
-                                        <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        
+                        <?php } ?>
+                        <tr class="border-top border-bottom">
+                            <td>
+                                <form action="ShopCart.php" method="post">
+                                    <input type="hidden" name="emptyCart" value="1">
+                                    <button type="submit" class="btn btn-danger btn-custom-size">Xóa tất cả</button>
+                                </form>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td><strong id="totalPrice">0</strong></td>
+                            <td>
+                                <form action="ShopCart.php" method="post">
+                                    <input type="hidden" name="delId" value="<?php echo $i; ?>">
+                                    <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh
+                                        toán</button>
+                                </form>
+                            </td>
+                        </tr>
+
                     </tbody>
                 </table>
             </form>
@@ -190,37 +193,36 @@
     <?php
     include "Footer.php";
     ?>
+    <script src="Bootstrap/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/d3f4e54f8d.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
 <script>
-function updateTotal() {
-    var total = 0;
-    var countChecked = 0;
+    function updateTotal() {
+        var total = 0;
+        var countChecked = 0;
 
-    var checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        var checkboxes = document.querySelectorAll('.item-checkbox:checked');
 
-    checkboxes.forEach(function(checkbox) {
-        var rowIndex = checkbox.value;
-        var isChecked = checkbox.checked;
-        if (isChecked) {
-            var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
-            total += totalItem;
-            countChecked++;
+        checkboxes.forEach(function (checkbox) {
+            var rowIndex = checkbox.value;
+            var isChecked = checkbox.checked;
+            if (isChecked) {
+                var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
+                total += totalItem;
+                countChecked++;
+            }
+        });
+
+        // Thêm dấu phẩy ngăn cách hàng nghìn
+        total = total.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
+
+        if (countChecked > 0) {
+            document.querySelector('#totalPrice').innerText = total + ' VNĐ';
+        } else {
+            document.querySelector('#totalPrice').innerText = '0 VNĐ';
         }
-    });
-
-    // Thêm dấu phẩy ngăn cách hàng nghìn
-    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
-
-    if (countChecked > 0) {
-        document.querySelector('#totalPrice').innerText = total + ' VNĐ';
-    } else {
-        document.querySelector('#totalPrice').innerText = '0 VNĐ';
     }
-}
 
 </script>
-
-

@@ -132,3 +132,13 @@ a {
 .icons{
     font-size: x-large;
 }
+.NoBtn{
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    color: inherit;
+}

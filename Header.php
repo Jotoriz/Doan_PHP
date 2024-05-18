@@ -91,7 +91,7 @@
                         if ($role == 'KH') {
                             echo '<i class="fa-regular fa-user icons dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
                             echo '<ul class="dropdown-menu">';
-                            echo '<li><a class="dropdown-item" href="#">Thông Tin Cá Nhân</a></li>';
+                            echo '<li><a class="dropdown-item" href="ThongTinCaNhanKH.php">Thông Tin Cá Nhân</a></li>';
                             echo '<li><a class="dropdown-item" href="#">Đổi Mật Khẩu</a></li>';
                             echo '<li><a class="dropdown-item logout">Đăng Xuất</a></li>';
                             echo '</ul>';
@@ -145,8 +145,18 @@
                 userIcon.classList.add('dropdown-toggle');
                 userIcon.setAttribute('data-bs-toggle', 'dropdown');
                 userDropdown.innerHTML = `
-                <li><a class="dropdown-item" href="#">Thông Tin Cá Nhân</a></li>
-                <li><a class="dropdown-item" href="#">Đổi Mật Khẩu</a></li>
+                <li><a class="dropdown-item">
+                    <form action="ThongTinCaNhanKH.php" method="GET">
+                        <input type="hidden" name="email" value="${localStorage.getItem('email')}">
+                        <button type="submit" class="NoBtn">Thông Tin Cá Nhân</button>
+                    </form>
+                </a></li>
+                <li><a class="dropdown-item">
+                    <form action="DoiMatKhauKH.php" method="GET">
+                        <input type="hidden" name="email" value="${localStorage.getItem('email')}">
+                        <button type="submit" class="NoBtn">Đổi Mật Khẩu</button>
+                    </form>
+                </a></li>
                 <li><a class="dropdown-item logout">Đăng Xuất</a></li>
                 `;
             } else if (role === 'NV') {
