@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="stylec.css">
 </head>
 <style>
-    /* Tùy chỉnh button */
 .btn {
     display: inline-block;
     font-weight: 400;
@@ -29,7 +28,6 @@
     background-color: #0056b3;
 }
 
-/* Tùy chỉnh button Chọn tệp */
 .btn-file {
     position: relative;
     overflow: hidden;
@@ -51,7 +49,6 @@
     display: block;
 }
 
-/* Tùy chỉnh button Thêm */
 .btn-add {
     background-color: #28a745;
 }
@@ -62,7 +59,7 @@
 
 </style>
 <?php
-session_start(); // Bắt đầu session
+session_start();
 
 $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -76,18 +73,14 @@ $loai = $pdo->query($sqlLoai);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
     try {
-        // Tạo kết nối CSDL
         $pdo1 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
         $pdo1->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo1->query("set names utf8");
 
-        // Tạo thư mục uploads nếu chưa tồn tại
         $uploads_dir = 'uploads';
         if (!is_dir($uploads_dir)) {
             mkdir($uploads_dir, 0777, true);
         }
-
-        // Lấy dữ liệu từ form
         $maLoai = $_POST['maLoai'];
         $maNCC = $_POST['maNCC'];
         $tenSanPham = $_POST['tenSanPham'];
@@ -96,16 +89,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
         $soLuongTonKho = $_POST['soLuongTonKho'];
         $moTa = $_POST['moTa'];
 
-        // Kiểm tra dữ liệu đầu vào
         if (empty($maLoai) || empty($maNCC) || empty($tenSanPham) || empty($gia) || empty($donViTinh) || empty($soLuongTonKho)) {
             echo '<div class="alert alert-danger" role="alert">Vui lòng điền đầy đủ thông tin!</div>';
         } else {
-            // Chuẩn bị câu lệnh SQL INSERT cho sản phẩm
             $sql = "INSERT INTO sanpham (MaLoai, MaNCC, TenSP, Gia, DVT, SoLuongTonKho, MoTaSP) 
                     VALUES (:maLoai, :maNCC, :tenSanPham, :gia, :donViTinh, :soLuongTonKho, :moTa)";
             $stmt = $pdo1->prepare($sql);
 
-            // Gán giá trị và thực thi câu lệnh
             $stmt->bindParam(':maLoai', $maLoai);
             $stmt->bindParam(':maNCC', $maNCC);
             $stmt->bindParam(':tenSanPham', $tenSanPham);
@@ -115,10 +105,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
             $stmt->bindParam(':moTa', $moTa);
 
             if ($stmt->execute()) {
-                // Lấy mã sản phẩm vừa chèn
                 $maSanPham = $pdo1->lastInsertId();
 
-                // Xử lý các hình ảnh tải lên
                 $hinhAnhFields = ['hinhAnh1', 'hinhAnh2', 'hinhAnh3'];
                 foreach ($hinhAnhFields as $field) {
                     if (!empty($_FILES[$field]['name'])) {
@@ -127,7 +115,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
                         $filePath = "$name";
 
                         if (move_uploaded_file($tmp_name, $filePath)) {
-                            // Chuẩn bị câu lệnh SQL INSERT cho hình ảnh
                             $sqlHinhAnh = "INSERT INTO hinhanh (MaSP, Hinh) VALUES (:maSanPham, :hinhAnh)";
                             $stmtHinhAnh = $pdo1->prepare($sqlHinhAnh);
                             $stmtHinhAnh->bindParam(':maSanPham', $maSanPham);
@@ -152,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
     <?php include "Header.php"; ?>
     <?php include "SubHeader.php"; ?>
     <div class="container mt-5">
-        <h1>Thêm Sản phẩm mới</h1>
+        <h2 align="center" style="color:#900;">THÊM SẢN PHẨM</h2>
         <form action="ThemSanPham.php" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="tenSanPham">Tên Sản phẩm:</label>
@@ -229,7 +216,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
             });
         });
         
-        // Làm mới form sau khi gửi
         document.getElementById('productForm').addEventListener('submit', function() {
             this.reset();
         });

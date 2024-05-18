@@ -133,7 +133,7 @@ button:hover {
     include "SubHeader.php";
 ?>
 <div class="container">
-    <h1>Đánh giá sản phẩm</h1>
+    <h2 align="center" style="color:#900;">ĐÁNH GIÁ SẢN PHẨM</h2>
     <?php if ($successMessage): ?>
         <div class="alert alert-success">
             <?php echo $successMessage; ?>

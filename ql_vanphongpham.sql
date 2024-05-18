@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2024 at 12:38 PM
+-- Generation Time: May 18, 2024 at 11:47 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -85,6 +85,27 @@ INSERT INTO `chucvu` (`MaCV`, `TenCV`) VALUES
 (1, 'Giám đốc'),
 (2, 'Nhân viên'),
 (3, 'Quản lý');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `danhgia`
+--
+
+CREATE TABLE `danhgia` (
+  `MaDG` int(10) NOT NULL,
+  `MaSP` int(10) NOT NULL,
+  `Sao` int(11) NOT NULL,
+  `LoiDanhGia` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `danhgia`
+--
+
+INSERT INTO `danhgia` (`MaDG`, `MaSP`, `Sao`, `LoiDanhGia`) VALUES
+(6, 4, 3, 'sfqavdcv'),
+(7, 6, 5, 'Đẹp');
 
 -- --------------------------------------------------------
 
@@ -199,7 +220,10 @@ INSERT INTO `hinhanh` (`MaSP`, `Hinh`) VALUES
 (24, 'keo_dan_giay_thien_long_diem_10_g-08_3.jpg'),
 (25, 'may-tinh-casio-fx-580vn_1.jpg'),
 (25, 'may-tinh-casio-fx-580vn_2.jpg'),
-(25, 'may-tinh-casio-fx-580vn_3.jpg');
+(25, 'may-tinh-casio-fx-580vn_3.jpg'),
+(46, 'da_quang_1.jpg'),
+(46, 'da_quang_2.jpg'),
+(46, 'da_quang_3.jpg');
 
 -- --------------------------------------------------------
 
@@ -246,7 +270,7 @@ CREATE TABLE `khachhang` (
 
 INSERT INTO `khachhang` (`MaKH`, `HoTen_KH`, `DiaChi_KH`, `SDT_KH`, `Email_KH`, `Password_KH`) VALUES
 (1, 'Nguyễn Văn Minh', 'Hà Nội', '0912345678', 'vanminh1998@gmail.com', 'Minh123@'),
-(2, 'Lê Thị Bình', 'Bình Dương', '0927589197', 'thoconcute123@gmail.com', 'Binh456@'),
+(2, 'Lê Thị Bình', 'Hà Nội', '0927589197', 'thoconcute123@gmail.com', 'Binh456@'),
 (3, 'Lê Minh Bảo', 'Hải Phòng', '0973571563', 'leminhbao2000@gmail.com', '@minhBao987'),
 (4, 'Phạm Việt Dũng', 'Bình Định', '0958174892', 'dungviet038@gmail.com', 'vietDung@482'),
 (5, 'Phan Minh Tâm', 'TP.HCM', '0989673619', 'phantam992@gmail.com', 'Tamphan992@');
@@ -407,7 +431,8 @@ INSERT INTO `sanpham` (`MaSP`, `MaLoai`, `MaNCC`, `TenSP`, `Gia`, `DVT`, `SoLuon
 (22, 2, 7, 'Bộ sách giáo khoa lớp 1', 190000, 'Bộ', 300, 'Sách giáo khoa là một loại sách đặc thù cung cấp kiến thức mang tính nền tảng cho người học'),
 (23, 6, 6, 'Keo khô Thiên Long G-019', 5000, 'Chai', 600, 'Keo khô Thiên Long G-019 là loại keo chuyên dùng để dán giấy, ở dạng khô, sử dụng thuận tiện, không lo bị chảy, không bám dính tay'),
 (24, 6, 6, 'Keo dán giấy Điểm 10 G-08', 4000, 'Chai', 532, 'Keo dán giấy Thiên Long - Điểm 10 G-08 là dạng keo lỏng, lọ nhỏ dung tích 30ml tiện dụng, mùi dễ chịu, không gắt'),
-(25, 7, 11, 'Máy tính Casio fx-580VN X', 750000, 'Cái', 100, 'Máy được trang bị màn hình LCD có độ phân giải cao. Casio fx-580VN X là bước tiến đột phá, mang công nghệ đến gần hơn với lớp học.');
+(25, 7, 11, 'Máy tính Casio fx-580VN X', 750000, 'Cái', 100, 'Máy được trang bị màn hình LCD có độ phân giải cao. Casio fx-580VN X là bước tiến đột phá, mang công nghệ đến gần hơn với lớp học.'),
+(46, 1, 6, 'Bút dạ quang DQ1', 20000, 'Cây', 111, 'dvhv8ynxmwo0jmsh');
 
 --
 -- Indexes for dumped tables
@@ -431,6 +456,13 @@ ALTER TABLE `chitiethoadon`
 --
 ALTER TABLE `chucvu`
   ADD PRIMARY KEY (`MaCV`);
+
+--
+-- Indexes for table `danhgia`
+--
+ALTER TABLE `danhgia`
+  ADD PRIMARY KEY (`MaDG`),
+  ADD KEY `FK_DanhGia_SanPham` (`MaSP`);
 
 --
 -- Indexes for table `dondathang`
@@ -503,6 +535,12 @@ ALTER TABLE `chucvu`
   MODIFY `MaCV` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `danhgia`
+--
+ALTER TABLE `danhgia`
+  MODIFY `MaDG` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `dondathang`
 --
 ALTER TABLE `dondathang`
@@ -548,7 +586,7 @@ ALTER TABLE `nhanvien`
 -- AUTO_INCREMENT for table `sanpham`
 --
 ALTER TABLE `sanpham`
-  MODIFY `MaSP` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `MaSP` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- Constraints for dumped tables
@@ -566,6 +604,12 @@ ALTER TABLE `chitietdondathang`
 ALTER TABLE `chitiethoadon`
   ADD CONSTRAINT `FK_ChiTietHoaDon_HoaDon` FOREIGN KEY (`MaHD`) REFERENCES `hoadon` (`MaHD`),
   ADD CONSTRAINT `FK_ChiTietHoaDon_SanPham` FOREIGN KEY (`MaSP`) REFERENCES `sanpham` (`MaSP`);
+
+--
+-- Constraints for table `danhgia`
+--
+ALTER TABLE `danhgia`
+  ADD CONSTRAINT `FK_DanhGia_SanPham` FOREIGN KEY (`MaSP`) REFERENCES `sanpham` (`MaSP`);
 
 --
 -- Constraints for table `hinhanh`

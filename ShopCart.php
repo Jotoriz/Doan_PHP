@@ -11,27 +11,24 @@
 <?php
     $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
     $pdo->query("set names utf8");
-
-    $sqlSanPham = "select * from loaisp";
-    $loai_sp = $pdo->query($sqlSanPham);
-    //Giỏ hàng
+    
     session_start();
     if(!isset($_SESSION['cart']))
     {
         $_SESSION['cart']=[];
     }
-    //Xóa ALL giỏ hàng
+    
     if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
         unset($_SESSION['cart']);
     }
-    //Xóa item trong giỏ
+    
     if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
         array_splice($_SESSION['cart'], $_POST['delId'], 1);
     }
-    //Update item trong giỏ
-    if (isset($_POST['updateItem'])) { // Sử dụng tên nút submit đã thay đổi
+    
+    if (isset($_POST['updateItem'])) {
         $index = $_POST['updateId'];
-        $new_quantity = $_POST['sl_'.$index]; // Lấy giá trị số lượng từ trường số lượng tương ứng
+        $new_quantity = $_POST['sl_'.$index]; 
         if (isset($_SESSION['cart'][$index])) {
             $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
         }
@@ -103,7 +100,7 @@
                 <td class="text-center mx-auto">
                     <div style="margin-bottom: 20px;">
                         <img src="image/GioHang.png" alt="Cute message"
-                            style="max-width: 200px; display: block; margin: 0 auto;"> <!-- Thu nhỏ hình ảnh và căn giữa -->
+                            style="max-width: 200px; display: block; margin: 0 auto;">
                     </div>
                     <p style="font-size: 20px;">Đơn hàng của bạn đang trống. Hãy chọn mua sản phẩm nhé!</p>
                 </td>
@@ -137,23 +134,19 @@
                             ?>
                             <tr>
                                 <td>
-                                    <!-- <input type="checkbox" name="deleteItem[]" value="<?php echo $item['MaSP'];?>" class="item-checkbox" onchange="updateTotal()"> -->
-
                                     <input type="checkbox" name="deleteItem[]" value="<?php echo $i;?>" class="item-checkbox" onchange="updateTotal()">
                                     <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;"><?php echo $item['TenSP'];?>
                                     
                                 </td>
-                                <td id="price_<?php echo $i; ?>"> <!-- Thêm id cho mỗi giá -->
+                                <td id="price_<?php echo $i; ?>">
                                     <?php echo number_format($item['Gia'], 0, ',', '.'); ?> VNĐ
                                 </td>
                                 <td>
-                                    <form action="ShopCart.php" method="post"> <!-- Thay đổi phương thức thành POST -->
+                                    <form action="ShopCart.php" method="post">
                                         <input type="hidden" name="updateId" value="<?php echo $i; ?>">
                                         <input type="number" name="sl_<?php echo $i; ?>" class="cart-qty-single"
                                             value="<?php echo $item['SoLuong']; ?>" min="1" max="1000">
-                                        <!-- Sử dụng tên trường số lượng khác nhau -->
                                         <button type="submit" name="updateItem" class="text-primary">Cập nhật</button>
-                                        <!-- Đổi tên nút submit để phân biệt -->
                                     </form>
                                 </td>
 
@@ -227,8 +220,8 @@
             }
         });
 
-        // Thêm dấu phẩy ngăn cách hàng nghìn
-        total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
+    //
+    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
 
         if (countChecked > 0) {
             document.querySelector('#totalPrice').innerText = total + ' VNĐ';
@@ -237,8 +230,18 @@
         }
     }
 
-    // Hàm để lấy dữ liệu từ LocalStorage và đặt vào các trường input
-    function setDataFromLocalStorage() {
+    // Hàm để lấy email từ LocalStorage và đặt vào trường input
+    function setEmailFromLocalStorage() {
+        // Kiểm tra xem LocalStorage có chứa dữ liệu email hay không
+        if(localStorage.getItem('email')) {
+            
+            var email = localStorage.getItem('email');
+            
+            document.getElementById('email').value = email;
+        }
+    }
+     // Hàm để lấy dữ liệu từ LocalStorage và đặt vào các trường input
+     function setDataFromLocalStorage() {
         // Kiểm tra xem LocalStorage có chứa dữ liệu email hay không
         if(localStorage.getItem('email')) {
             // Lấy dữ liệu email từ LocalStorage

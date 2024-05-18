@@ -12,6 +12,7 @@
     <title>Quản lý Sản phẩm</title>
 </head>
 <style>
+    
 table {
     width: 100%;
     border-collapse: collapse;
@@ -50,30 +51,28 @@ button:hover {
 }
 .btn-edit,.btn-add,
 .btn-delete {
-    background-color: #4CAF50; /* Màu xanh */
-    color: white; /* Màu chữ trắng */
-    padding: 8px 12px; /* Khoảng cách giữa nút và văn bản */
-    border: none; /* Xóa viền */
-    border-radius: 4px; /* Bo tròn các góc */
-    cursor: pointer; /* Biến con trỏ thành dấu nhấp chuột */
-    margin-right: 5px; /* Khoảng cách giữa các nút */
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
 }
 
 .btn-delete {
-    background-color: #f44336; /* Màu đỏ cho nút xóa */
+    background-color: #f44336;
 }
 .btn-add {
     background-color: #007bff;
 }
-/* Khi nút được hover */
 .btn-edit:hover,
 .btn-delete:hover,
 .btn-add:hover {
-    opacity: 0.8; /* Giảm độ trong khi hover */
+    opacity: 0.8;
 }
 
 
-/* Thiết lập độ rộng cho từng cột */
 table td:nth-child(1), table th:nth-child(1) { width: 7%; }
 table td:nth-child(2), table th:nth-child(2) { width: 5%; }
 table td:nth-child(3), table th:nth-child(3) { width: 5%; }
@@ -95,21 +94,16 @@ table td:nth-child(8), table th:nth-child(8) { width: 30%; }
         $id = $_GET['id'];
 
         try {
-            // Bắt đầu một giao dịch
             $pdo->beginTransaction();
 
-            // Xóa hình ảnh liên quan từ bảng hinhanh
             $sqlDeleteImages = "DELETE FROM hinhanh WHERE MaSP = $id";
             $pdo->query($sqlDeleteImages);
 
-            // Sau đó xóa sản phẩm từ bảng sanpham
             $sqlDeleteProduct = "DELETE FROM sanpham WHERE MaSP = $id";
             $pdo->query($sqlDeleteProduct);
 
-            // Hoàn thành giao dịch
             $pdo->commit();
         } catch (PDOException $e) {
-            // Nếu có lỗi, hủy bỏ giao dịch và hiển thị thông báo lỗi
             $pdo->rollBack();
             echo "Lỗi: " . $e->getMessage();
         }
@@ -123,7 +117,9 @@ table td:nth-child(8), table th:nth-child(8) { width: 30%; }
     ?>
     <div class="product mt-5">
         <h2 align="center" style="color:#900;">DANH SÁCH SẢN PHẨM</h2>
-        <!-- Hiển thị danh sách sản phẩm -->
+        <form action="ThemSanPham.php" method="get">
+            <button type="submit" class="btn-add">Thêm sản phẩm</button>
+        </form>
         <table>
             <thead>
                 <tr>
@@ -166,9 +162,7 @@ table td:nth-child(8), table th:nth-child(8) { width: 30%; }
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <form action="ThemSanPham.php" method="get">
-            <button type="submit" class="btn-add">Thêm sản phẩm</button>
-        </form>
+        
     </div>
     <?php
     include "Footer.php";
@@ -179,7 +173,6 @@ table td:nth-child(8), table th:nth-child(8) { width: 30%; }
     function confirmDelete(id) {
         if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')) {
             $.post('XoaSanPham.php', { id: id }, function(data) {
-                // Sau khi xóa thành công, reload lại trang
                 window.location.reload();
             });
         }
