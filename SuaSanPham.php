@@ -9,56 +9,57 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <style>
-    /* Custom styles for form elements */
-    form {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    label {
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 8px;
-        display: block;
-    }
-
-    input[type="text"],
-    select,
-    textarea {
-        width: calc(100% - 22px);
-        padding: 10px;
-        margin: 5px 0 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-
-    input[type="submit"] {
-        background-color: #007bff;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0 15px;
-        border: none;
-        border-radius: 4px;
+    .btn {
+        display: inline-block;
+        font-weight: 400;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
         cursor: pointer;
-        width: 100%;
-        transition: background-color 0.3s ease;
+        background-color: #007bff;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: .25rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     }
 
-    input[type="submit"]:hover {
+    .btn:hover {
         background-color: #0056b3;
     }
 
-    /* Additional styles for specific elements */
-    select {
-        width: 100%;
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-file input[type="file"] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+
+    .btn-add {
+        background-color: #28a745;
+    }
+
+    .btn-add:hover {
+        background-color: #218838;
     }
 </style>
 <?php
+    session_start();
     $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->query("set names utf8");
@@ -85,30 +86,38 @@
         $stmt->bindParam(':moTa', $moTa);
 
         if ($stmt->execute()) {
-            echo '<div class="alert alert-success" role="alert">Cập nhật sản phẩm thành công!</div>';
+            $_SESSION['success_message'] = 'Cập nhật sản phẩm thành công!';
+            header("Location: SuaSanPham.php?id=$maSanPham");
+            exit();
         } else {
             echo '<div class="alert alert-danger" role="alert">Cập nhật sản phẩm thất bại. Vui lòng thử lại!</div>';
         }
-    } else {
-        $maSanPham = $_GET['maSanPham'];
-        $sql = "SELECT * FROM sanpham WHERE MaSP = :maSanPham";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':maSanPham', $maSanPham);
-        $stmt->execute();
-        $product = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch as associative array
-
-        if ($product === false) {
-            echo '<div class="alert alert-danger" role="alert">Không tìm thấy sản phẩm với mã này.</div>';
-            die(); // Stop further processing if product is not found
-        }
-
-        $sqlNCC = "SELECT MaNCC, TenNCC FROM nhacungcap";
-        $ncc = $pdo->query($sqlNCC);
-
-        $sqlLoai = "SELECT MaLoai, TenLoai FROM loaisp";
-        $loai = $pdo->query($sqlLoai);
     }
+
+    if (isset($_SESSION['success_message'])) {
+        echo '<div class="alert alert-success" role="alert">' . $_SESSION['success_message'] . '</div>';
+        unset($_SESSION['success_message']);
+    }
+
+    $maSanPham = $_GET['id'];
+    $sql = "SELECT * FROM sanpham WHERE MaSP = :maSanPham";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':maSanPham', $maSanPham);
+    $stmt->execute();
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($product === false) {
+        echo '<div class="alert alert-danger" role="alert">Không tìm thấy sản phẩm với mã này.</div>';
+        die();
+    }
+
+    $sqlNCC = "SELECT MaNCC, TenNCC FROM nhacungcap";
+    $ncc = $pdo->query($sqlNCC);
+
+    $sqlLoai = "SELECT MaLoai, TenLoai FROM loaisp";
+    $loai = $pdo->query($sqlLoai);
 ?>
+
 
 <body>
     <?php
@@ -117,7 +126,7 @@
     include "SubHeader.php";
     ?>
     <div class="container mt-5">
-        <h1>Sửa Sản phẩm</h1>
+        <h2 align="center" style="color:#900;">SỬA SẢN PHẨM</h2>
         <form action="SuaSanPham.php" method="POST">
             <input type="hidden" name="maSanPham" value="<?php echo $product['MaSP']; ?>">
             <div class="form-group">
@@ -133,7 +142,7 @@
                 <input type="text" class="form-control" id="donViTinh" name="donViTinh" value="<?php echo $product['DVT']; ?>">
             </div>
             <div class="form-group">
-                <label for="soLuongTonKho">Số lượng tồn kho:</label>
+                <label for="soLuongTonKho">Số lượng:</label>
                 <input type="text" class="form-control" id="soLuongTonKho" name="soLuongTonKho" value="<?php echo $product['SoLuongTonKho']; ?>">
             </div>
             <div class="form-group">
