@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
 
 
-    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
     $pdo->exec("set names utf8");
 
     $customerQuery = $pdo->prepare("SELECT * FROM khachhang WHERE Email_KH = :email AND Password_KH = :password");

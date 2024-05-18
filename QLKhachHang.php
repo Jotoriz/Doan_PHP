@@ -36,27 +36,27 @@
     }
 
     // Hàm xóa khách hàng
-    function XoaKH($pdo)
-    {
-        if(isset($_POST["btn_Delete"])){
-            // Lấy họ tên khách hàng từ form
-            $HoTen_KH = $_POST["hoten_KH"];
+    // function XoaKH($pdo)
+    // {
+    //     if(isset($_POST["btn_Delete"])){
+    //         // Lấy họ tên khách hàng từ form
+    //         $HoTen_KH = $_POST["hoten_KH"];
 
-            // Truy vấn xóa khách hàng dựa trên họ tên
-            $sql = "DELETE FROM KhachHang WHERE HoTen_KH = :HoTen_KH";
-            $sta = $pdo->prepare($sql);
+    //         // Truy vấn xóa khách hàng dựa trên họ tên
+    //         $sql = "DELETE FROM KhachHang WHERE HoTen_KH = :HoTen_KH";
+    //         $sta = $pdo->prepare($sql);
 
-            // Truyền tham số vào câu truy vấn
-            $kq = $sta->execute(array(':HoTen_KH' => $HoTen_KH)); 
+    //         // Truyền tham số vào câu truy vấn
+    //         $kq = $sta->execute(array(':HoTen_KH' => $HoTen_KH)); 
 
-            if($kq){
-                header("Location: QLKhachHang.php");
-                echo "Xóa thành công !";
-            } else{
-                echo "Xóa thất bại !";
-            }
-        }    
-    }
+    //         if($kq){
+    //             header("Location: QLKhachHang.php");
+    //             echo "Xóa thành công !";
+    //         } else{
+    //             echo "Xóa thất bại !";
+    //         }
+    //     }    
+    // }
 
     // Hàm tìm kiếm khách hàng
     function TimKiemKH($pdo, $keyword)
@@ -87,11 +87,11 @@
 
 
     // Xử lý hàm
-    if($_SERVER["REQUEST_METHOD"] == "POST"){
-        if(isset($_POST["btn_Delete"])){
-            XoaKH($pdo);
-        }
-    }
+    // if($_SERVER["REQUEST_METHOD"] == "POST"){
+    //     if(isset($_POST["btn_Delete"])){
+    //         XoaKH($pdo);
+    //     }
+    // }
 ?>
 
 <!DOCTYPE html>
@@ -100,13 +100,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="stylec.css">
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="ChiTietSP.css">
 
 </head>
 <body>
-<?php include "Header.php"; ?>
-<?php include "SubHeader.php"; ?>
+    <?php include "HeaderNhanVienKhachHang.php"; ?>
+    <?php include "SubHeaderNhanVIen.php"; ?>
     <div class="container KhachHang">
         <h1 class="text-center">DANH SÁCH KHÁCH HÀNG</h1>
 
@@ -128,7 +128,7 @@
                         <th scope="col">Địa chỉ</th>
                         <th scope="col">Số điện thoại</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Thao tác</th>
+                        <!-- <th scope="col">Thao tác</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -138,17 +138,17 @@
                         <td><?php echo $KH['DiaChi_KH']; ?></td>
                         <td><?php echo $KH['SDT_KH']; ?></td>
                         <td><?php echo $KH['Email_KH']; ?></td>
-                        <td>
-                        <form method="POST" action="QLSuaKH.php">
-                            <input type="hidden" name="hoten_KH" value="<?php echo $KH['HoTen_KH']; ?>">
-                            <button type="submit" class="btn btn-primary" name="btn_Edit">Sửa</button>
-                        </form>
+                        <!-- <td>
+                            <form method="POST" action="QLSuaKH.php">
+                                <input type="hidden" name="hoten_KH" value="<?php echo $KH['HoTen_KH']; ?>">
+                                <button type="submit" class="btn btn-primary" name="btn_Edit">Sửa</button>
+                            </form>
 
-                        <form method="POST">
-                            <input type="hidden" name="hoten_KH" value="<?php echo $KH['HoTen_KH']; ?>">
-                            <button type="submit" class="btn btn-danger" name="btn_Delete">Xóa</button>
-                        </form>              
-                        </td>
+                            <form method="POST">
+                                <input type="hidden" name="hoten_KH" value="<?php echo $KH['HoTen_KH']; ?>">
+                                <button type="submit" class="btn btn-danger" name="btn_Delete">Xóa</button>
+                            </form>              
+                        </td> -->
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-$pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+$pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
 $pdo->exec("set names utf8");
 
 $id = $_GET['id'];
@@ -19,7 +19,7 @@ $tenSP = $row["TenSP"];
 $gia = $row["Gia"];
 
 
-$pdo2 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+$pdo2 = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
 $pdo2->exec("set names utf8");
 if(isset($_GET["id"])) { // Kiểm tra xem biến $_GET["id"] có tồn tại không
     $maSP = $_GET["id"];
@@ -32,7 +32,7 @@ if(isset($_GET["id"])) { // Kiểm tra xem biến $_GET["id"] có tồn tại kh
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="stylec.css">
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="ChiTietSP.css">
     <title><?php echo $tenSP; ?></title>
 </head>

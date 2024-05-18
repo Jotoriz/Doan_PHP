@@ -9,7 +9,7 @@
 </head>
 
 <?php
-    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
     $pdo->query("set names utf8");
 
     $sqlNCC = "select MaNCC,TenNCC from nhacungcap";
@@ -42,8 +42,8 @@
     }
 ?>
 <body>
-    <?php include "Header.php"; ?>
-    <?php include "SubHeader.php"; ?>
+    <?php include "HeaderNhanVienKhachHang.php"; ?>
+    <?php include "SubHeaderNhanVIen.php"; ?>
     <div class="container mt-5">
         <h1>Thêm Sản phẩm mới</h1>
         <form action="ThemSanPham.php" method="POST">

@@ -129,7 +129,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
-        <link rel="stylesheet" href="stylec.css">
+        <link rel="stylesheet" href="styles.css">
         <link rel="stylesheet" href="ChiTietSP.css">
         <style>
             .row.mb-6.align-items-center {
@@ -145,8 +145,8 @@
     </head>
 
     <body>
-        <?php include "Header.php"; ?>
-        <?php include "SubHeader.php"; ?>
+        <?php include "HeaderNhanVienKhachHang.php"; ?>
+        <?php include "SubHeaderNhanVIen.php"; ?>
         <div class="container KhachHang">
             <h1 class="text-center">DANH SÁCH NHÂN VIÊN</h1>
 

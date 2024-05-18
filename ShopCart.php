@@ -1,98 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tất cả</title>
-    <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="stylec.css">
-</head>
-<?php
-    $pdo = new PDO("mysql:host=localhost;dbname=ql_nha_hang", "root", "");
-    $pdo->query("set names utf8");
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tất cả</title>
+        <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <?php
+        $pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
+        $pdo->query("set names utf8");
 
-    $sqlLoaiMon = "select * from loai_mon_an";
-    $loai_mon = $pdo->query($sqlLoaiMon);
-    //Giỏ hàng
-    session_start();
-    if(!isset($_SESSION['cart']))
-    {
-        $_SESSION['cart']=[];
-    }
-    //Xóa ALL giỏ hàng
-    if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
-        unset($_SESSION['cart']);
-    }
-    //Xóa item trong giỏ
-    if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
-        array_splice($_SESSION['cart'], $_POST['delId'], 1);
-    }
-    //Update item trong giỏ
-    if (isset($_POST['updateItem'])) { // Sử dụng tên nút submit đã thay đổi
-        $index = $_POST['updateId'];
-        $new_quantity = $_POST['sl_'.$index]; // Lấy giá trị số lượng từ trường số lượng tương ứng
-        if (isset($_SESSION['cart'][$index])) {
-            $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
-        }
-    }
-    
-
-    if(isset($_POST['add_to_cart'])) {
-        $maSP = $_POST['MaSP'];
-        $tenSP = $_POST['TenSP'];
-        $gia = $_POST['Gia'];
-        $sl = $_POST['sl'];
-
-        $product = array(
-            'MaSP' => $maSP,
-            'TenSP' => $tenSP,
-            'Gia' => $gia,
-            'SoLuong' => $sl
-        );
-
-        $flag=0;
-        $count = count($_SESSION['cart']);
-        for($i=0;$i<$count;$i++)
+        $sqlLoaiMon = "select * from loaisp";
+        $loai_mon = $pdo->query($sqlLoaiMon);
+        //Giỏ hàng
+        session_start();
+        if(!isset($_SESSION['cart']))
         {
-            $item=$_SESSION['cart'][$i];
-            if($item["MaSP"]==$maSP)
-            {
-                $flag=1;
-                $sl_new=$sl+$item["SoLuong"];
-                $item["SoLuong"]=$sl_new;
-                $_SESSION['cart'][$i]=$item;
-                break;
+            $_SESSION['cart']=[];
+        }
+        //Xóa ALL giỏ hàng
+        if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
+            unset($_SESSION['cart']);
+        }
+        //Xóa item trong giỏ
+        if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
+            array_splice($_SESSION['cart'], $_POST['delId'], 1);
+        }
+        //Update item trong giỏ
+        if (isset($_POST['updateItem'])) { // Sử dụng tên nút submit đã thay đổi
+            $index = $_POST['updateId'];
+            $new_quantity = $_POST['sl_'.$index]; // Lấy giá trị số lượng từ trường số lượng tương ứng
+            if (isset($_SESSION['cart'][$index])) {
+                $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
             }
         }
-        if($flag == 0)
-        {
-            $sp=array(
+        
+
+        if(isset($_POST['add_to_cart'])) {
+            $maSP = $_POST['MaSP'];
+            $tenSP = $_POST['TenSP'];
+            $gia = $_POST['Gia'];
+            $sl = $_POST['sl'];
+
+            $product = array(
                 'MaSP' => $maSP,
                 'TenSP' => $tenSP,
                 'Gia' => $gia,
                 'SoLuong' => $sl
             );
-            $_SESSION['cart'][]=$sp;
+
+            $flag=0;
+            $count = count($_SESSION['cart']);
+            for($i=0;$i<$count;$i++)
+            {
+                $item=$_SESSION['cart'][$i];
+                if($item["MaSP"]==$maSP)
+                {
+                    $flag=1;
+                    $sl_new=$sl+$item["SoLuong"];
+                    $item["SoLuong"]=$sl_new;
+                    $_SESSION['cart'][$i]=$item;
+                    break;
+                }
+            }
+            if($flag == 0)
+            {
+                $sp=array(
+                    'MaSP' => $maSP,
+                    'TenSP' => $tenSP,
+                    'Gia' => $gia,
+                    'SoLuong' => $sl
+                );
+                $_SESSION['cart'][]=$sp;
+            }
         }
-    }
 
-    $maSP = isset($_GET['id']) ? $_GET['id'] : null;
+        $maSP = isset($_GET['id']) ? $_GET['id'] : null;
 
-    if ($maSP) {
-        $pdo1 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
-        $pdo1->query("set names utf8");
+        if ($maSP) {
+            $pdo1 = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
+            $pdo1->query("set names utf8");
 
-        $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
-        $hinh = $pdo1->query($sqlHinh)->fetch(PDO::FETCH_ASSOC);
-        $imgUrl = $hinh['Hinh'];
-    }
-    
-?>
+            $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
+            $hinh = $pdo1->query($sqlHinh)->fetch(PDO::FETCH_ASSOC);
+            $imgUrl = $hinh['Hinh'];
+        }       
+    ?>
 
 <body>
     <?php
-    include "Header.php";
+    include "HeaderNhanVienKhachHang.php";
 
     include "SubHeader.php";
     ?>
@@ -136,9 +135,10 @@
                             ?>
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="deleteItem[]" value="<?php echo $i;?>" class="item-checkbox" onchange="updateTotal()"> <!-- Thêm onchange -->
-                                    <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;"><?php echo $item['TenSP'];?>
-                                    
+                                    <form action="ShopCart.php" method="post">                                        
+                                        <input type="checkbox" name="<?php echo $MaSP ?>" value="<?php echo $i;?>" class="item-checkbox" onchange="updateTotal()">
+                                        <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;"><?php echo $item['TenSP'];?>
+                                    </form>
                                 </td>
                                 <td id="price_<?php echo $i; ?>"> <!-- Thêm id cho mỗi giá -->
                                     <?php echo number_format($item['Gia'], 0, ',', '.'); ?> VNĐ
@@ -174,13 +174,13 @@
                                 <td></td>
                                 <td><strong id="totalPrice">0</strong></td>
                                 <td>
-                                    <form action="ShopCart.php" method="post">
-                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
-                                        <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
+                                    <form action="ThanhToan.php" method="post" id="checkoutForm">
+                                        <input type="hidden" name="email" id="email">
+                                        <input type="hidden" id="selected_products" name="selected_products" value="">                              
+                                        <button type="submit" class="btn btn-danger btn-custom-size">Thanh toán</button>
                                     </form>
                                 </td>
                             </tr>
-                        
                     </tbody>
                 </table>
             </form>
@@ -194,32 +194,111 @@
 
 </html>
 <script>
-function updateTotal() {
-    var total = 0;
-    var countChecked = 0;
+    function updateTotal() {
+        var total = 0;
+        var countChecked = 0;
+        var checkboxes = document.querySelectorAll('.item-checkbox:checked');
 
-    var checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        checkboxes.forEach(function(checkbox) {
+            var rowIndex = checkbox.value;
+            var isChecked = checkbox.checked;
+            if (isChecked) {
+                var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
+                total += totalItem;
+                countChecked++;
+            }
+        });
 
-    checkboxes.forEach(function(checkbox) {
-        var rowIndex = checkbox.value;
-        var isChecked = checkbox.checked;
-        if (isChecked) {
-            var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
-            total += totalItem;
-            countChecked++;
+        total = total.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
+
+        if (countChecked > 0) {
+            document.querySelector('#totalPrice').innerText = total + ' VNĐ';
+        } else {
+            document.querySelector('#totalPrice').innerText = '0 VNĐ';
         }
-    });
-
-    // Thêm dấu phẩy ngăn cách hàng nghìn
-    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
-
-    if (countChecked > 0) {
-        document.querySelector('#totalPrice').innerText = total + ' VNĐ';
-    } else {
-        document.querySelector('#totalPrice').innerText = '0 VNĐ';
     }
-}
-
 </script>
 
 
+
+<script>
+    var email = window.localStorage.getItem('email');
+        document.getElementById('email').value = email;
+
+        var email = window.localStorage.getItem('email');
+        document.getElementById('email').value = email;
+
+        function getCustomerInfo() {
+        var email = document.getElementById('email').value;
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'ThanhToan.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                // Xử lý kết quả trả về từ server (nếu có)
+                console.log(xhr.responseText);
+            }
+        };
+        xhr.send('email=' + encodeURIComponent(email));
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Lắng nghe sự kiện click trên nút thanh toán
+    document.getElementById('checkoutForm').addEventListener('submit', function(event) {
+        // Lấy danh sách checkbox
+        var checkboxes = document.querySelectorAll('.item-checkbox');
+
+        // Biến kiểm tra xem có checkbox nào được chọn không
+        var isChecked = false;
+
+        // Lặp qua từng checkbox để kiểm tra xem có checkbox nào được chọn không
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                isChecked = true;
+            }
+        });
+
+        // Nếu không có checkbox nào được chọn, ngăn chặn việc submit form và hiển thị thông báo
+        if (!isChecked) {
+            event.preventDefault(); // Ngăn chặn form submit
+            var warningMessage = document.createElement('p');
+            warningMessage.textContent = 'Chọn sản phẩm để thanh toán.';
+            warningMessage.style.color = 'red';
+            var form = document.getElementById('checkoutForm');
+            form.appendChild(warningMessage);
+        }
+    });
+});
+</script>
+
+<script>
+    // Hàm này được gọi khi người dùng chọn hoặc hủy chọn một sản phẩm
+    function updateSelectedProducts() {
+        var selectedProducts = [];
+        var checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        checkboxes.forEach(function(checkbox) {
+            var rowIndex = checkbox.value;
+            var quantity = document.querySelector('input[name="sl_' + rowIndex + '"]').value; // Lấy số lượng sản phẩm
+            selectedProducts.push({ MaSP: rowIndex, SoLuong: quantity });
+        });
+        document.getElementById('selected_products').value = JSON.stringify(selectedProducts);
+    }
+
+    // Thêm sự kiện onchange cho tất cả các ô checkbox
+    var checkboxes = document.querySelectorAll('.item-checkbox');
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            updateSelectedProducts();
+        });
+    });
+
+    // Cập nhật số lượng khi người dùng thay đổi số lượng sản phẩm
+    var qtyInputs = document.querySelectorAll('.cart-qty-single');
+    qtyInputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+            updateSelectedProducts();
+        });
+    });
+</script>

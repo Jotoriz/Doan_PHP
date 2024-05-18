@@ -11,9 +11,9 @@
 
 <body>
     <?php
-    include "Header.php";
+    include "HeaderNhanVienKhachHang.php";
 
-    include "SubHeader.php";
+    include "SubHeaderNhanVien.php";
     ?>
 
     <div class="product">

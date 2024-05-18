@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="DangKys.css">
-    <link rel="stylesheet" href="stylec.css">
+    <link rel="stylesheet" href="styles.css">
     <title>Đăng Ký</title>
 </head>
 
