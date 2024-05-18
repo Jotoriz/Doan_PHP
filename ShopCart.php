@@ -9,8 +9,11 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <?php
-    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
     $pdo->query("set names utf8");
+
+    $sqlSanPham = "select * from loaisp";
+    $loai_sp = $pdo->query($sqlSanPham);
     //Giỏ hàng
     session_start();
     if(!isset($_SESSION['cart']))
@@ -77,7 +80,7 @@
     $maSP = isset($_GET['id']) ? $_GET['id'] : null;
 
     if ($maSP) {
-        $pdo1 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+        $pdo1 = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
         $pdo1->query("set names utf8");
 
         $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
@@ -176,8 +179,10 @@
                                 <td></td>
                                 <td><strong id="totalPrice">0</strong></td>
                                 <td>
-                                    <form action="ShopCart.php" method="post">
+                                    <form action="ThanhToan.php" method="post" onsubmit="return validateForm()">
                                         <input type="hidden" name="delId" value="<?php echo $i; ?>">
+
+                                        <input type="hidden" name="email" id="email">
                                         <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
                                     </form>
                                 </td>
@@ -197,32 +202,65 @@
 
 </html>
 <script>
-function updateTotal() {
-    var total = 0;
-    var countChecked = 0;
+    function updateTotal() {
+        var total = 0;
+        var countChecked = 0;
 
-    var checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        var checkboxes = document.querySelectorAll('.item-checkbox:checked');
 
-    checkboxes.forEach(function(checkbox) {
-        var rowIndex = checkbox.value;
-        var isChecked = checkbox.checked;
-        if (isChecked) {
-            var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
-            total += totalItem;
-            countChecked++;
+        checkboxes.forEach(function(checkbox) {
+            var rowIndex = checkbox.value;
+            var isChecked = checkbox.checked;
+            if (isChecked) {
+                var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
+                total += totalItem;
+                countChecked++;
+            }
+        });
+
+        // Thêm dấu phẩy ngăn cách hàng nghìn
+        total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
+
+        if (countChecked > 0) {
+            document.querySelector('#totalPrice').innerText = total + ' VNĐ';
+        } else {
+            document.querySelector('#totalPrice').innerText = '0 VNĐ';
         }
-    });
-
-    // Thêm dấu phẩy ngăn cách hàng nghìn
-    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
-
-    if (countChecked > 0) {
-        document.querySelector('#totalPrice').innerText = total + ' VNĐ';
-    } else {
-        document.querySelector('#totalPrice').innerText = '0 VNĐ';
     }
-}
 
+    // Hàm để lấy email từ LocalStorage và đặt vào trường input
+    function setEmailFromLocalStorage() {
+        // Kiểm tra xem LocalStorage có chứa dữ liệu email hay không
+        if(localStorage.getItem('email')) {
+            // Lấy dữ liệu email từ LocalStorage
+            var email = localStorage.getItem('email');
+            // Đặt giá trị email vào trường input
+            document.getElementById('email').value = email;
+        }
+    }
+
+    // Hàm để kiểm tra xem ít nhất một checkbox đã được chọn hay chưa
+    function validateForm() {
+        var checkboxes = document.querySelectorAll('.item-checkbox');
+        var isChecked = false;
+
+        // Lặp qua tất cả các checkbox và kiểm tra xem có ít nhất một checkbox nào được chọn hay không
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                isChecked = true;
+            }
+        });
+
+        // Nếu không có checkbox nào được chọn, hiển thị thông báo và ngăn chặn gửi form
+        if (!isChecked) {
+            alert("Vui lòng chọn ít nhất một mục để thanh toán.");
+            return false; // Ngăn chặn gửi form
+        } else {
+            // Nếu có ít nhất một checkbox được chọn, đặt email từ LocalStorage vào trường input
+            setEmailFromLocalStorage(); // Gọi hàm setEmailFromLocalStorage để đặt email từ LocalStorage vào trường input
+            return true; // Cho phép gửi form nếu có ít nhất một checkbox được chọn và email đã được đặt
+        }
+    }
 </script>
 
 
