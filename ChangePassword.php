@@ -1,5 +1,5 @@
 <?php
-$pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+$pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
 $pdo->query("set names utf8");
 
 $oldPassword = $_POST['Old_Pasword'];
