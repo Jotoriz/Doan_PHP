@@ -10,7 +10,6 @@ $imagePath = "image/SanPham/" . $id . ".jpg";
 $imageFolder = "image/SanPham/" . $id . "/";
 $imageFiles = glob($imageFolder . "*.jpg");
 
-// Truy vấn dữ liệu từ bảng SanPham
 $sql = "SELECT TenSP, Gia FROM SanPham WHERE MaSP = $id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
@@ -21,7 +20,7 @@ $gia = $row["Gia"];
 
 $pdo2 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
 $pdo2->exec("set names utf8");
-if (isset($_GET["id"])) { // Kiểm tra xem biến $_GET["id"] có tồn tại không
+if (isset($_GET["id"])) {
     $maSP = $_GET["id"];
     $sql5 = "select * from sanpham where masp =" . $maSP;
     $sp = $pdo2->query($sql5);
