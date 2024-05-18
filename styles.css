@@ -149,6 +149,21 @@ a {
     height: 300px;
 }
 
+.icons {
+    font-size: x-large;
+}
+
 #checkoutForm p {
     width: 111px;
+}
+
+.NoBtn {
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    color: inherit;
 }

@@ -1,6 +1,6 @@
 <?php
     // Kết nối đến cơ sở dữ liệu
-    $pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
     $pdo->exec("set names utf8");
 
     // Hàm sửa thông tin nhân viên

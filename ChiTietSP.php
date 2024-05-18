@@ -21,7 +21,7 @@ $gia = $row["Gia"];
 
 $pdo2 = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
 $pdo2->exec("set names utf8");
-if(isset($_GET["id"])) { // Kiểm tra xem biến $_GET["id"] có tồn tại không
+if (isset($_GET["id"])) { // Kiểm tra xem biến $_GET["id"] có tồn tại không
     $maSP = $_GET["id"];
     $sql5 = "select * from sanpham where masp =" . $maSP;
     $sp = $pdo2->query($sql5);
@@ -74,7 +74,7 @@ if(isset($_GET["id"])) { // Kiểm tra xem biến $_GET["id"] có tồn tại kh
             <div class='col'>
                 <h2><?php echo $tenSP; ?></h2>
                 <p>Giá: <?php echo $gia; ?></p>
-                
+
                 <div class="buttons">
                     <form action="ShopCart.php" method="POST">
                         <input type="hidden" name="MaSP" value="<?php echo $maSP; ?>">
@@ -82,10 +82,14 @@ if(isset($_GET["id"])) { // Kiểm tra xem biến $_GET["id"] có tồn tại kh
                         <input type="hidden" name="Gia" value="<?php echo $gia; ?>">
                         <input type="number" name="sl" value="1" min="1">
                         <br></br>
-                        <button type="submit" name="add_to_cart" class="add-to-cart btn btn-primary">Thêm vào giỏ hàng</button>
+                        <button type="submit" name="add_to_cart" class="add-to-cart btn btn-primary">Thêm vào giỏ
+                            hàng</button>
                         <button class="buy-now btn btn-primary">Mua ngay</button>
                     </form>
-                    
+                    <form action="DanhGia.php" method="GET">
+                        <input type="hidden" name="MaSP" value="<?php echo htmlspecialchars($maSP); ?>">
+                        <button type="submit" class="rate-now btn btn-secondary">Đánh giá</button>
+                    </form>
 
                 </div>
             </div>
@@ -126,6 +130,8 @@ if(isset($_GET["id"])) { // Kiểm tra xem biến $_GET["id"] có tồn tại kh
             });
         });
     </script>
+    <script src="https://kit.fontawesome.com/d3f4e54f8d.js" crossorigin="anonymous"></script>
+    <script src="Bootstrap/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

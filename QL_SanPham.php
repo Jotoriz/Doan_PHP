@@ -94,8 +94,25 @@ table td:nth-child(8), table th:nth-child(8) { width: 30%; }
     if(isset($_GET['id']) && !empty($_GET['id'])) {
         $id = $_GET['id'];
 
-        $sqlDelete = "DELETE FROM sanpham WHERE MaSP = $id";
-        $pdo->query($sqlDelete);
+        try {
+            // Bắt đầu một giao dịch
+            $pdo->beginTransaction();
+
+            // Xóa hình ảnh liên quan từ bảng hinhanh
+            $sqlDeleteImages = "DELETE FROM hinhanh WHERE MaSP = $id";
+            $pdo->query($sqlDeleteImages);
+
+            // Sau đó xóa sản phẩm từ bảng sanpham
+            $sqlDeleteProduct = "DELETE FROM sanpham WHERE MaSP = $id";
+            $pdo->query($sqlDeleteProduct);
+
+            // Hoàn thành giao dịch
+            $pdo->commit();
+        } catch (PDOException $e) {
+            // Nếu có lỗi, hủy bỏ giao dịch và hiển thị thông báo lỗi
+            $pdo->rollBack();
+            echo "Lỗi: " . $e->getMessage();
+        }
     }
 ?>
 <body>
@@ -122,7 +139,6 @@ table td:nth-child(8), table th:nth-child(8) { width: 30%; }
                 </tr>
             </thead>
             <tbody>
-                <!-- PHP code để lặp qua danh sách sản phẩm và hiển thị chúng -->
                 <?php foreach ($sanpham as $product): ?>
                     <tr>
                         <td><?php echo $product['MaSP']; ?></td>
@@ -139,7 +155,7 @@ table td:nth-child(8), table th:nth-child(8) { width: 30%; }
                                 <button type="submit" class="btn-edit">Sửa</button>
                             </form>
 
-                            <form action="XoaSanPham.php" method="post" style="display: inline;">
+                            <form action="QL_SanPham.php" method="get" style="display: inline;">
                                 <input type="hidden" name="id" value="<?php echo $product['MaSP'];?>">
                                 <button type="submit" class="btn-delete" onclick="return confirm('Bạn chắc chắn muốn xóa sản phẩm này?')">Xóa</button>
                             </form>
@@ -150,8 +166,6 @@ table td:nth-child(8), table th:nth-child(8) { width: 30%; }
                 <?php endforeach; ?>
             </tbody>
         </table>
-
-        <!-- Button Thêm -->
         <form action="ThemSanPham.php" method="get">
             <button type="submit" class="btn-add">Thêm sản phẩm</button>
         </form>
