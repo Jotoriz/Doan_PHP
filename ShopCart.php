@@ -9,11 +9,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <?php
-    $pdo = new PDO("mysql:host=localhost;dbname=ql_nha_hang", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
     $pdo->query("set names utf8");
-
-    $sqlLoaiMon = "select * from loai_mon_an";
-    $loai_mon = $pdo->query($sqlLoaiMon);
     //Giỏ hàng
     session_start();
     if(!isset($_SESSION['cart']))

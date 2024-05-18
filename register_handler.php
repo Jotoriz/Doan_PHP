@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $confirmPassword = $_POST["nhapLaiMatKhau"];
 
     // Connect to the database
-    $pdo = new PDO("mysql:host=localhost;port=3307;dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
     $pdo->exec("set names utf8");
 
     // Check if the email already exists
