@@ -85,7 +85,10 @@ if(isset($_GET["id"])) { // Kiểm tra xem biến $_GET["id"] có tồn tại kh
                         <button type="submit" name="add_to_cart" class="add-to-cart btn btn-primary">Thêm vào giỏ hàng</button>
                         <button class="buy-now btn btn-primary">Mua ngay</button>
                     </form>
-                    
+                    <form action="DanhGia.php" method="GET">
+                        <input type="hidden" name="MaSP" value="<?php echo htmlspecialchars($maSP); ?>">
+                        <button type="submit" class="rate-now btn btn-secondary">Đánh giá</button>
+                    </form>
 
                 </div>
             </div>
