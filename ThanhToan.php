@@ -1,19 +1,36 @@
 <?php
-
     session_start();
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-        if(isset($_POST['email']) && !empty($_POST['email'])) {
-
+        if (isset($_POST['email']) && !empty($_POST['email'])) {
             $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
             $pdo->exec("set names utf8");
             
             $email = $_POST['email'];
-
-            $sql = "SELECT HoTen_KH, DiaChi_KH, SDT_KH, Email_KH FROM KhachHang WHERE Email_KH = :Email_KH";
+    
+            // Truy vấn thông tin khách hàng bao gồm MaKH
+            $sql = "SELECT MaKH, HoTen_KH, DiaChi_KH, SDT_KH, Email_KH FROM KhachHang WHERE Email_KH = :Email_KH";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(array(':Email_KH' => $email));
             $khachHang = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($khachHang) {
+                $maKH = $_SESSION['maKH'] = $khachHang['MaKH']; // Sử dụng MaKH thay vì Email_KH
+    
+                // Lấy thông tin sản phẩm từ POST
+                if (isset($_POST['selected_products']) && is_array($_POST['selected_products'])) {
+                    $selected_products = $_POST['selected_products'];
+    
+                    $datHangResult = DatHang($selected_products, $pdo, $maKH);
+                    if ($datHangResult) {
+                        echo "Đặt hàng thành công";
+                    } else {
+                        echo "Đặt hàng không thành công";
+                    }
+                } else {
+                    echo "Thông tin sản phẩm không hợp lệ.";
+                }
+            }
         }
     }
 
@@ -23,7 +40,6 @@
 
         if (is_array($selected_products)) {
             foreach ($selected_products as $product) {
-
                 $stmt = $pdo->prepare("SELECT TenSP, Gia FROM SanPham WHERE MaSP = :MaSP");
                 $stmt->execute(array(':MaSP' => $product['maSP']));
                 $product_info = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -55,6 +71,61 @@
         echo '<td><strong>' . number_format($tongTien, 0, ',', '.') . ' VNĐ</strong></td>';
         echo '</tr>';
     }
+
+    function DatHang($selected_products, $pdo, $maKH)
+    {
+        // Tính tổng tiền của đơn hàng
+        $tongTien = 0;
+        foreach ($selected_products as $product) {
+            $maSP = $product['maSP'];
+            
+            // Kiểm tra xem key 'soLuong' có tồn tại và không null không
+            if(isset($product['soLuong']) && $product['soLuong'] !== null){
+                $soLuong = $product['soLuong'];
+                
+                $stmt = $pdo->prepare("SELECT Gia FROM SanPham WHERE MaSP = :maSP");
+                $stmt->execute(array(':maSP' => $maSP));
+                $gia = $stmt->fetch(PDO::FETCH_ASSOC)['Gia'];
+                
+                $tongTien += $gia * $soLuong;
+            } else {
+                // Nếu không tồn tại hoặc là null, bỏ qua sản phẩm này
+                continue;
+            }
+        }
+
+        // Lấy ngày đặt hàng hiện tại
+        $ngayDatHang = date('Y-m-d');
+
+        // Thêm thông tin đơn hàng vào bảng DonDatHang
+        $trangThai = "Đang xử lý";
+        $stmt = $pdo->prepare("INSERT INTO DonDatHang (MaKH, NgayDatHang, TrangThaiDonHang, TongGiaTriDonHang) VALUES (:maKH, :ngayDatHang, :trangThai, :tongTien)");
+        $stmt->execute(array(':maKH' => $maKH, ':ngayDatHang' => $ngayDatHang, ':trangThai' => $trangThai, ':tongTien' => $tongTien));
+
+        // Lấy ID đơn hàng vừa tạo
+        $maDH = $pdo->lastInsertId();
+
+        // Thêm thông tin giỏ hàng vào bảng ChiTietDonDatHang
+        foreach ($selected_products as $product) {
+            $maSP = $product['maSP'];
+            
+            // Kiểm tra xem key 'soLuong' có tồn tại và không null không
+            if(isset($product['soLuong']) && $product['soLuong'] !== null){
+                $soLuong = $product['soLuong'];
+                
+                $stmt = $pdo->prepare("SELECT Gia FROM SanPham WHERE MaSP = :maSP");
+                $stmt->execute(array(':maSP' => $maSP));
+                $gia = $stmt->fetch(PDO::FETCH_ASSOC)['Gia'];
+                $thanhTien = $gia * $soLuong;
+                
+                $stmt = $pdo->prepare("INSERT INTO ChiTietDonDatHang (MaDH, MaSP, SoLuong, ThanhTien) VALUES (:maDH, :maSP, :soLuong, :thanhTien)");
+                $stmt->execute(array(':maDH' => $maDH, ':maSP' => $maSP, ':soLuong' => $soLuong, ':thanhTien' => $thanhTien));
+            } else {
+                // Nếu không tồn tại hoặc là null, bỏ qua sản phẩm này
+                continue;
+            }
+        }
+    }
 ?>
 
 
@@ -74,7 +145,7 @@
     ?>
     
     <div class="container">
-        <form method="POST" action="XacNhan.php">
+        <form method="POST" action="ThanhToan.php">
             <div class="row">
                 <div class="col-md-6">
                     <!-- Thông tin khách hàng -->
@@ -129,12 +200,15 @@
                 </div>
             </div>
             <!-- Nút Xác nhận đơn hàng -->
-            <div class="row">
-                <div class="col-md-6 offset-md-6">
-                    <input type="hidden" name="selected_products" value='<?php echo json_encode($_POST['selected_products']); ?>'>
-                    <button type="submit" class="btn btn-success float-right">Xác nhận đơn hàng</button>
+            <form method="post" action="">
+                <div class="row">
+                    <div class="col-md-6 offset-md-6">
+                        <input type="hidden" name="selected_products" value='<?php echo json_encode($selected_products); ?>'>
+                        <input type="hidden" name="submit_order" value="true">
+                        <button type="submit" class="btn btn-success float-right">Đặt Hàng</button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </form>
     </div>
 

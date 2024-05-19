@@ -187,7 +187,7 @@
                                                 echo '<input type="hidden" name="selected_products[' . $maSP . '][soLuong]" value="' . htmlspecialchars($item['SoLuong']) . '">';
                                             }
                                         ?>
-                                        <button type="submit" class="btn btn-danger btn-custom-size">Thanh toán</button>
+                                        <button type="submit" class="btn btn-success btn-custom-size">Mua Hàng</button>
                                     </form>
                                 </td>
                             </tr>
