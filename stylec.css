@@ -1,40 +1,43 @@
 /* *{
     ser-select: none; 
 } */
-.logo{
+.logo {
     height: 100px;
     align-items: center;
     border-radius: 8px;
 }
-.header{
+
+.header {
     display: flex;
     margin-top: 10px;
     justify-content: center;
     align-items: center;
 }
+
 a {
-  text-decoration: none;
-  color: inherit;
-  display: inline-block; 
-  cursor: pointer; 
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    cursor: pointer;
 }
+
 .search-container {
     margin-top: 25px;
     display: flex;
     align-items: center;
-    border:3px solid #FFB0BD;
+    border: 3px solid #FFB0BD;
     border-radius: 9px;
     height: 40px;
 }
 
 .search-input {
-  flex-grow: 1;
-  border: none;
-  background: none;
-  outline: none;
-  padding: 8px;
-  font-size: 16px;
-  color: rgb(88, 88, 88);
+    flex-grow: 1;
+    border: none;
+    background: none;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    color: rgb(88, 88, 88);
 }
 
 .search-icon {
@@ -48,55 +51,66 @@ a {
     width: 40px;
     background-color: #FFB0BD;
 }
-.space{
+
+.space {
     margin: 0 5px;
 }
-.auth_link{
+
+.auth_link {
     transition: ease-in 0.2s;
 }
-.auth_link:hover{
+
+.auth_link:hover {
     color: #FFB0BD;
 }
-.Icon{
+
+.Icon {
     padding-top: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
 }
-.cart{
+
+.cart {
     margin-left: 20px;
     font-size: xx-large;
 
 }
+
 .cart-badge {
     position: absolute;
     top: 28px;
     right: 53px;
 }
-.subHeader{
+
+.subHeader {
     margin-top: 10px;
     background-color: #FFB0BD;
     padding-top: 20px;
 }
-.hinhsubHeader{
+
+.hinhsubHeader {
     height: 46px;
     cursor: pointer;
 }
 
-.item{
+.item {
     text-align: center;
-    
+
 }
-.sp{
+
+.sp {
     margin-bottom: 30px;
 }
-.footer{
+
+.footer {
     background-color: #FFB0BD;
     min-height: 100px;
     padding: 20px;
 }
-.giohang{
+
+.giohang {
     display: flex;
     justify-content: center;
 
@@ -109,23 +123,49 @@ a {
     transition: ease-in 0.3s;
 
 }
-.giohang:hover{
+
+.giohang:hover {
     background-color: #FFB0BD;
 }
-.footer{
+
+.footer {
     margin-top: 10px;
     background-color: #FFB0BD;
     padding-top: 20px;
 }
-.pagination{
+
+.pagination {
     display: flex;
     justify-content: center;
 
 }
-.card{
+
+.card {
     height: 400px;
     margin-bottom: 30px;
 }
-.card-img-top{
+
+.card-img-top {
     height: 300px;
 }
+
+.icons {
+    font-size: x-large;
+}
+
+#checkoutForm p {
+    width: 111px;
+}
+
+.NoBtn {
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    color: inherit;
+}
+
+
