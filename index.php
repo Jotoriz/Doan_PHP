@@ -96,27 +96,29 @@
                 ?>
             </div>
 
-            <?php if (!isset($_GET['loaiSP'])) { ?>
-                <div class="row">
-                    <div class="pagination col">
-                        <?php
-                        $sql = "SELECT COUNT(*) AS totalCount FROM sanpham";
-                        $stmt = $pdo->query($sql);
-                        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                        $totalCount = $result['totalCount'];
-                        $totalPages = ceil($totalCount / $productsPerPage);
-                        ?>
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination justify-content-center" id="pagination">
-                                <?php for ($page = 1; $page <= $totalPages; $page++) { ?>
-                                    <li class="page-item <?php echo ($page == $currentPage) ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
-                                    </li>
-                                <?php } ?>
-                            </ul>
-                        </nav>
+            <?php if (!isset($_GET['loaiSP']) && !isset($_GET['search'])) { ?>
+                <?php if (!isset($_GET['loaiSP']) || !isset($_GET['search'])) { ?>
+                    <div class="row">
+                        <div class="pagination col">
+                            <?php
+                            $sql = "SELECT COUNT(*) AS totalCount FROM sanpham";
+                            $stmt = $pdo->query($sql);
+                            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                            $totalCount = $result['totalCount'];
+                            $totalPages = ceil($totalCount / $productsPerPage);
+                            ?>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center" id="pagination">
+                                    <?php for ($page = 1; $page <= $totalPages; $page++) { ?>
+                                        <li class="page-item <?php echo ($page == $currentPage) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
             <?php } ?>
         </div>
 

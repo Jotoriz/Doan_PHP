@@ -11,7 +11,7 @@
     <style>
         .subHeader {
             background-color: #FFB0BD;
-            padding: 10px;
+
         }
 
         .col-1_5 {
@@ -21,7 +21,7 @@
 
         .item {
             text-align: center;
-            margin: 10px;
+            margin-left: 20px;
         }
 
         .hinhsubHeader {
@@ -34,6 +34,24 @@
 
         .item p {
             margin-top: 2px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+        .item:hover .hinhsubHeader {
+            transform: scale(1.1);
+            transition: transform 0.3s ease-in-out;
         }
     </style>
 </head>

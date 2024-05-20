@@ -14,6 +14,7 @@
     align-items: center;
 }
 
+
 a {
     text-decoration: none;
     color: inherit;
@@ -40,18 +41,6 @@ a {
     color: rgb(88, 88, 88);
 }
 
-.search-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 15px;
-    cursor: pointer;
-    height: 100%;
-    width: 40px;
-    background-color: #FFB0BD;
-}
-
 .space {
     margin: 0 5px;
 }
@@ -75,7 +64,6 @@ a {
 .cart {
     margin-left: 20px;
     font-size: xx-large;
-
 }
 
 .cart-badge {
@@ -97,7 +85,6 @@ a {
 
 .item {
     text-align: center;
-
 }
 
 .sp {
@@ -113,15 +100,13 @@ a {
 .giohang {
     display: flex;
     justify-content: center;
-
-    margin-left: 10px;
-    padding: 5px;
-    height: 30px;
-    width: 30px;
+    margin-left: 20px;
+    padding: 3px;
+    height: 40px;
+    width: 40px;
     border-radius: 8px;
     cursor: pointer;
     transition: ease-in 0.3s;
-
 }
 
 .giohang:hover {
@@ -169,3 +154,32 @@ a {
 }
 
 
+.search-icon {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    height: 100%;
+    width: 40px;
+    background-color: #FFB0BD;
+}
+.user{
+    height: 40px;
+    width: 45px;
+    padding: 7px;
+    border-radius: 7px;
+    transition: ease-in 0.3s;
+    cursor: pointer;
+}
+.user:hover{
+    background-color: #FFB0BD;
+
+}

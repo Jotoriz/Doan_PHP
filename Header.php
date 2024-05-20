@@ -97,18 +97,12 @@
                         $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
 
                         if ($role == 'KH') {
-                            echo '<i class="fa-regular fa-user icons dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
+                            echo '<i class="fa-regular fa-user icons user dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
                             echo '<ul class="dropdown-menu">';
-                            echo '<li><a class="dropdown-item" href="ThongTinCaNhanKH.php">Thông Tin Cá Nhân</a></li>';
-                            echo '<li><a class="dropdown-item" href="#">Đổi Mật Khẩu</a></li>';
-                            echo '<li><a class="dropdown-item logout">Đăng Xuất</a></li>';
                             echo '</ul>';
                         } elseif ($role == 'NV') {
-                            echo '<i class="fa-solid fa-user icons dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
+                            echo '<i class="fa-solid fa-user icons user dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
                             echo '<ul class="dropdown-menu">';
-                            echo '<li><a class="dropdown-item" href="#">Thông Tin Cá Nhân</a></li>';
-                            echo '<li><a class="dropdown-item" href="#">Another action</a></li>';
-                            echo '<li><a class="dropdown-item logout">Đăng Xuất</a></li>';
                             echo '</ul>';
                         } else {
                             echo '<a href="DangKy.php" class="auth_link">Đăng Ký</a>';
