@@ -11,7 +11,7 @@
 
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
+
     <style>
         #menu {
             margin-top: 20px;
@@ -75,10 +75,18 @@
                     <a href="index.php"><img class="logo" src="image/logo.png" /></a>
                 </div>
                 <div class="col-5">
-                    <div class="search-container">
-                        <input type="text" id="search-input" class="search-input" placeholder="Tìm kiếm sản phẩm">
-                        <span class="search-icon"><i class="fas fa-search"></i></span>
-                    </div>
+                    <form action="index.php" method="get">
+                        <div class="search-container">
+                            <input type="text" id="search-input" name="search" class="search-input"
+                                placeholder="Tìm kiếm sản phẩm">
+                            <button type="submit" class="NoBtn search-icon"><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            document.getElementById('search-input').focus();
+                        });
+                    </script>
                 </div>
                 <div class="col-4">
                     <div class="Icon">
@@ -89,18 +97,12 @@
                         $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
 
                         if ($role == 'KH') {
-                            echo '<i class="fa-regular fa-user icons dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
+                            echo '<i class="fa-regular fa-user icons user dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
                             echo '<ul class="dropdown-menu">';
-                            echo '<li><a class="dropdown-item" href="ThongTinCaNhanKH.php">Thông Tin Cá Nhân</a></li>';
-                            echo '<li><a class="dropdown-item" href="#">Đổi Mật Khẩu</a></li>';
-                            echo '<li><a class="dropdown-item logout">Đăng Xuất</a></li>';
                             echo '</ul>';
                         } elseif ($role == 'NV') {
-                            echo '<i class="fa-solid fa-user icons dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
+                            echo '<i class="fa-solid fa-user icons user dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
                             echo '<ul class="dropdown-menu">';
-                            echo '<li><a class="dropdown-item" href="#">Thông Tin Cá Nhân</a></li>';
-                            echo '<li><a class="dropdown-item" href="#">Another action</a></li>';
-                            echo '<li><a class="dropdown-item logout">Đăng Xuất</a></li>';
                             echo '</ul>';
                         } else {
                             echo '<a href="DangKy.php" class="auth_link">Đăng Ký</a>';
@@ -165,8 +167,10 @@
                 userIcon.classList.add('dropdown-toggle');
                 userIcon.setAttribute('data-bs-toggle', 'dropdown');
                 userDropdown.innerHTML = `
-                <li><a class="dropdown-item" href="#">Thông Tin Cá Nhân</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="QLNhanVien.php">Quản Lý Nhân Viên</a></li>
+                <li><a class="dropdown-item" href="QLKhachHang.php">Thông Tin Khách Hàng</a></li>
+                <li><a class="dropdown-item" href="QL_SanPham.php">Quản Lý Sản Phẩm</a></li>
+                <li><a class="dropdown-item" href="#">Quản Lý Đơn hàng</a></li>
                 <li><a class="dropdown-item logout">Đăng Xuất</a></li>
                 `;
             } else {

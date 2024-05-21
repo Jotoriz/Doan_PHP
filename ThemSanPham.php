@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,55 +9,54 @@
     <link rel="stylesheet" href="stylec.css">
 </head>
 <style>
-.btn {
-    display: inline-block;
-    font-weight: 400;
-    color: #fff;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    background-color: #007bff;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: .25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
+    .btn {
+        display: inline-block;
+        font-weight: 400;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        background-color: #007bff;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: .25rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
 
-.btn:hover {
-    background-color: #0056b3;
-}
+    .btn:hover {
+        background-color: #0056b3;
+    }
 
-.btn-file {
-    position: relative;
-    overflow: hidden;
-}
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
 
-.btn-file input[type="file"] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
-    cursor: inherit;
-    display: block;
-}
+    .btn-file input[type="file"] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
 
-.btn-add {
-    background-color: #28a745;
-}
+    .btn-add {
+        background-color: #28a745;
+    }
 
-.btn-add:hover {
-    background-color: #218838;
-}
-
+    .btn-add:hover {
+        background-color: #218838;
+    }
 </style>
 <?php
 session_start();
@@ -137,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
 
 <body>
     <?php include "Header.php"; ?>
-    <?php include "SubHeader.php"; ?>
+    <?php include "SubHeaderNhanVien.php"; ?>
     <div class="container mt-5">
         <h2 align="center" style="color:#900;">THÊM SẢN PHẨM</h2>
         <form action="ThemSanPham.php" method="POST" enctype="multipart/form-data">
@@ -199,24 +199,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submitted'])) {
                 </div>
             </div>
             <button type="submit" class="btn btn-add">Thêm</button>
-            <?php if (!isset($_POST['submitted'])): ?> 
+            <?php if (!isset($_POST['submitted'])): ?>
                 <input type="hidden" name="submitted" value="1">
             <?php endif; ?>
         </form>
     </div>
     <?php include "Footer.php"; ?>
 </body>
+
 </html>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.form-control-file').forEach(input => {
-            input.addEventListener('change', function() {
+            input.addEventListener('change', function () {
                 let label = this.nextElementSibling;
                 label.textContent = this.files.length > 0 ? this.files[0].name : 'Chọn tệp';
             });
         });
-        
-        document.getElementById('productForm').addEventListener('submit', function() {
+
+        document.getElementById('productForm').addEventListener('submit', function () {
             this.reset();
         });
     });
