@@ -3,6 +3,7 @@
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST['email']) && !empty($_POST['email'])) {
+
             $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
             $pdo->exec("set names utf8");
             
@@ -27,8 +28,6 @@
                     } else {
                         echo "Đặt hàng không thành công";
                     }
-                } else {
-                    echo "Thông tin sản phẩm không hợp lệ.";
                 }
             }
         }
@@ -39,6 +38,7 @@
         $tongTien = 0;
 
         if (is_array($selected_products)) {
+
             foreach ($selected_products as $product) {
                 $stmt = $pdo->prepare("SELECT TenSP, Gia FROM SanPham WHERE MaSP = :MaSP");
                 $stmt->execute(array(':MaSP' => $product['maSP']));
@@ -120,9 +120,6 @@
                 
                 $stmt = $pdo->prepare("INSERT INTO ChiTietDonDatHang (MaDH, MaSP, SoLuong, ThanhTien) VALUES (:maDH, :maSP, :soLuong, :thanhTien)");
                 $stmt->execute(array(':maDH' => $maDH, ':maSP' => $maSP, ':soLuong' => $soLuong, ':thanhTien' => $thanhTien));
-            } else {
-                // Nếu không tồn tại hoặc là null, bỏ qua sản phẩm này
-                continue;
             }
         }
     }
@@ -199,8 +196,9 @@
                     </table>
                 </div>
             </div>
-            <!-- Nút Xác nhận đơn hàng -->
-            <form method="post" action="">
+        </form>
+        <!-- Nút Xác nhận đơn hàng -->
+        <form method="post" action="ThongBaoDH.php">
                 <div class="row">
                     <div class="col-md-6 offset-md-6">
                         <input type="hidden" name="selected_products" value='<?php echo json_encode($selected_products); ?>'>
@@ -209,7 +207,6 @@
                     </div>
                 </div>
             </form>
-        </form>
     </div>
 
     <?php

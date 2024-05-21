@@ -241,7 +241,7 @@
         }
     }
 
-     function setDataFromLocalStorage() {
+    function setDataFromLocalStorage() {
         if(localStorage.getItem('email')) {
             var email = localStorage.getItem('email');
             document.getElementById('email').value = email;
