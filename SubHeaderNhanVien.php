@@ -44,7 +44,7 @@
                         <a class="nav-link" href="QL_SanPham.php">Sản Phẩm</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="donhang.php">Đơn Hàng</a>
+                        <a class="nav-link" href="QLDonHang.php">Đơn Hàng</a>
                     </li>
                 </ul>
             </nav>

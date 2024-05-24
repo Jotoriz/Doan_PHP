@@ -153,12 +153,14 @@
                         <button type="submit" class="NoBtn">Thông Tin Cá Nhân</button>
                     </form>
                 </a></li>
+                <li><a class="dropdown-item" href="DonHangKH.php">Đơn Hàng</a></li>
                 <li><a class="dropdown-item">
                     <form action="DoiMatKhauKH.php" method="GET">
                         <input type="hidden" name="email" value="${localStorage.getItem('email')}">
                         <button type="submit" class="NoBtn">Đổi Mật Khẩu</button>
                     </form>
                 </a></li>
+
                 <li><a class="dropdown-item logout">Đăng Xuất</a></li>
                 `;
             } else if (role === 'NV') {
@@ -170,7 +172,7 @@
                 <li><a class="dropdown-item" href="QLNhanVien.php">Quản Lý Nhân Viên</a></li>
                 <li><a class="dropdown-item" href="QLKhachHang.php">Thông Tin Khách Hàng</a></li>
                 <li><a class="dropdown-item" href="QL_SanPham.php">Quản Lý Sản Phẩm</a></li>
-                <li><a class="dropdown-item" href="#">Quản Lý Đơn hàng</a></li>
+                <li><a class="dropdown-item" href="QLDonHang.php">Quản Lý Đơn hàng</a></li>
                 <li><a class="dropdown-item logout">Đăng Xuất</a></li>
                 `;
             } else {

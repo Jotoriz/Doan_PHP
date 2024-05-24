@@ -9,91 +9,92 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <?php
-    $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
-    $pdo->query("set names utf8");
-    
-    session_start();
-    if(!isset($_SESSION['cart']))
-    {
-        $_SESSION['cart']=[];
+$pdo = new PDO("mysql:host=localhost; dbname=ql_vanphongpham", "root", "");
+$pdo->query("set names utf8");
+
+session_start();
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
+    unset($_SESSION['cart']);
+}
+
+if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
+    array_splice($_SESSION['cart'], $_POST['delId'], 1);
+}
+
+if (isset($_POST['updateItem'])) {
+    $index = $_POST['updateId'];
+    $new_quantity = $_POST['sl_' . $index];
+    if (isset($_SESSION['cart'][$index])) {
+        $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
     }
-    
-    if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
-        unset($_SESSION['cart']);
-    }
-    
-    if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
-        array_splice($_SESSION['cart'], $_POST['delId'], 1);
-    }
-    
-    if (isset($_POST['updateItem'])) {
-        $index = $_POST['updateId'];
-        $new_quantity = $_POST['sl_'.$index]; 
-        if (isset($_SESSION['cart'][$index])) {
-            $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
+}
+
+
+if (isset($_POST['add_to_cart'])) {
+    $maSP = $_POST['MaSP'];
+    $tenSP = $_POST['TenSP'];
+    $gia = $_POST['Gia'];
+    $sl = $_POST['sl'];
+
+    $product = array(
+        'MaSP' => $maSP,
+        'TenSP' => $tenSP,
+        'Gia' => $gia,
+        'SoLuong' => $sl
+    );
+
+    $flag = 0;
+    $count = count($_SESSION['cart']);
+    for ($i = 0; $i < $count; $i++) {
+        $item = $_SESSION['cart'][$i];
+        if ($item["MaSP"] == $maSP) {
+            $flag = 1;
+            $sl_new = $sl + $item["SoLuong"];
+            $item["SoLuong"] = $sl_new;
+            $_SESSION['cart'][$i] = $item;
+            break;
         }
     }
-    
-
-    if(isset($_POST['add_to_cart'])) {
-        $maSP = $_POST['MaSP'];
-        $tenSP = $_POST['TenSP'];
-        $gia = $_POST['Gia'];
-        $sl = $_POST['sl'];
-
-        $product = array(
+    if ($flag == 0) {
+        $sp = array(
             'MaSP' => $maSP,
             'TenSP' => $tenSP,
             'Gia' => $gia,
             'SoLuong' => $sl
         );
-
-        $flag=0;
-        $count = count($_SESSION['cart']);
-        for($i=0;$i<$count;$i++)
-        {
-            $item=$_SESSION['cart'][$i];
-            if($item["MaSP"]==$maSP)
-            {
-                $flag=1;
-                $sl_new=$sl+$item["SoLuong"];
-                $item["SoLuong"]=$sl_new;
-                $_SESSION['cart'][$i]=$item;
-                break;
-            }
-        }
-        if($flag == 0)
-        {
-            $sp=array(
-                'MaSP' => $maSP,
-                'TenSP' => $tenSP,
-                'Gia' => $gia,
-                'SoLuong' => $sl
-            );
-            $_SESSION['cart'][]=$sp;
-        }
+        $_SESSION['cart'][] = $sp;
     }
+}
 
-    $maSP = isset($_GET['id']) ? $_GET['id'] : null;
+$maSP = isset($_GET['id']) ? $_GET['id'] : null;
 
-    if ($maSP) {
-        $pdo1 = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
-        $pdo1->query("set names utf8");
+if ($maSP) {
+    $pdo1 = new PDO("mysql:host=localhost; dbname=ql_vanphongpham", "root", "");
+    $pdo1->query("set names utf8");
 
-        $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
-        $hinh = $pdo1->query($sqlHinh)->fetch(PDO::FETCH_ASSOC);
-        $imgUrl = $hinh['Hinh'];
-    }
-    
+    $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
+    $hinh = $pdo1->query($sqlHinh)->fetch(PDO::FETCH_ASSOC);
+    $imgUrl = $hinh['Hinh'];
+}
+
 ?>
+<style>
+    .shopcart {
+        min-height: 484px;
+    }
+</style>
 
 <body>
     <?php
-    include "HeaderNhanVienKhachHang.php";
+    include "Header.php";
 
     include "SubHeader.php";
     ?>
-    <div class="product mt-5">
+    <div class="product mt-5 shopcart">
         <h2 align="center" style="color:#900;">THÔNG TIN GIỎ HÀNG CỦA BẠN</h2>
         <?php if (empty($_SESSION['cart'])) { ?>
             <table class="table">
@@ -134,9 +135,11 @@
                             ?>
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="deleteItem[]" value="<?php echo $i;?>" class="item-checkbox" onchange="updateTotal()">
-                                    <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;"><?php echo $item['TenSP'];?>
-                                    
+                                    <input type="checkbox" name="deleteItem[]" value="<?php echo $i; ?>" class="item-checkbox"
+                                        onchange="updateTotal()">
+                                    <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2"
+                                        style="width:60px;"><?php echo $item['TenSP']; ?>
+
                                 </td>
                                 <td id="price_<?php echo $i; ?>">
                                     <?php echo number_format($item['Gia'], 0, ',', '.'); ?> VNĐ
@@ -162,36 +165,36 @@
 
                                 </td>
                             </tr>
-                            <?php } ?>
-                            <tr class="border-top border-bottom">
-                                <td>
-                                    <form action="ShopCart.php" method="post">
-                                        <input type="hidden" name="emptyCart" value="1">
-                                        <button type="submit" class="btn btn-danger btn-custom-size">Xóa tất cả</button>
-                                    </form>
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td><strong id="totalPrice">0</strong></td>
-                                <td>
-                                    <form action="ThanhToan.php" method="post" onsubmit="setDataFromLocalStorage()">
-                                        <input type="hidden" name="email" id="email">
-                                        <input type="hidden" name="selected_products" id="selected_products">
-                                        <?php
-                                            foreach ($_SESSION['cart'] as $i => $item) {
-                                                $maSP = htmlspecialchars($item['MaSP']);
-                                                $imgUrl = "image/SanPham/" . $maSP . ".jpg";
+                        <?php } ?>
+                        <tr class="border-top border-bottom">
+                            <td>
+                                <form action="ShopCart.php" method="post">
+                                    <input type="hidden" name="emptyCart" value="1">
+                                    <button type="submit" class="btn btn-danger btn-custom-size">Xóa tất cả</button>
+                                </form>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td><strong id="totalPrice">0</strong></td>
+                            <td>
+                                <form action="ThanhToan.php" method="post" onsubmit="setDataFromLocalStorage()">
+                                    <input type="hidden" name="email" id="email">
+                                    <input type="hidden" name="selected_products" id="selected_products">
+                                    <?php
+                                    foreach ($_SESSION['cart'] as $i => $item) {
+                                        $maSP = htmlspecialchars($item['MaSP']);
+                                        $imgUrl = "image/SanPham/" . $maSP . ".jpg";
 
-                                                echo '<input type="hidden" name="selected_products[' . $maSP . '][image]" value="' . htmlspecialchars($imgUrl) . '">';
-                                                echo '<input type="hidden" name="selected_products[' . $maSP . '][maSP]" value="' . $maSP . '">';
-                                                echo '<input type="hidden" name="selected_products[' . $maSP . '][soLuong]" value="' . htmlspecialchars($item['SoLuong']) . '">';
-                                            }
-                                        ?>
-                                        <button type="submit" class="btn btn-success btn-custom-size">Mua Hàng</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        
+                                        echo '<input type="hidden" name="selected_products[' . $maSP . '][image]" value="' . htmlspecialchars($imgUrl) . '">';
+                                        echo '<input type="hidden" name="selected_products[' . $maSP . '][maSP]" value="' . $maSP . '">';
+                                        echo '<input type="hidden" name="selected_products[' . $maSP . '][soLuong]" value="' . htmlspecialchars($item['SoLuong']) . '">';
+                                    }
+                                    ?>
+                                    <button type="submit" class="btn btn-success btn-custom-size">Mua Hàng</button>
+                                </form>
+                            </td>
+                        </tr>
+
                     </tbody>
                 </table>
             </form>
@@ -212,7 +215,7 @@
 
         var checkboxes = document.querySelectorAll('.item-checkbox:checked');
 
-        checkboxes.forEach(function(checkbox) {
+        checkboxes.forEach(function (checkbox) {
             var rowIndex = checkbox.value;
             var isChecked = checkbox.checked;
             if (isChecked) {
@@ -222,8 +225,8 @@
             }
         });
 
-    //
-    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
+        //
+        total = total.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
 
         if (countChecked > 0) {
             document.querySelector('#totalPrice').innerText = total + ' VNĐ';
@@ -233,20 +236,18 @@
     }
 
     function setEmailFromLocalStorage() {
-        if(localStorage.getItem('email')) {
-            
+        if (localStorage.getItem('email')) {
+
             var email = localStorage.getItem('email');
-            
+
             document.getElementById('email').value = email;
         }
     }
 
     function setDataFromLocalStorage() {
-        if(localStorage.getItem('email')) {
+        if (localStorage.getItem('email')) {
             var email = localStorage.getItem('email');
             document.getElementById('email').value = email;
         }
     }
 </script>
-
-
