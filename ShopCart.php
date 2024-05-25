@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <?php
-    $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost; dbname=ql_vanphongpham", "root", "");
     $pdo->query("set names utf8");
     
     session_start();
@@ -134,9 +134,8 @@
                             ?>
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="deleteItem[]" value="<?php echo $i;?>" class="item-checkbox" onchange="updateTotal()"> <!-- Thêm onchange -->
-                                    <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;"><?php echo $item['TenSP'];?>
-                                    
+                                    <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;">
+                                    <?php echo $item['TenSP']; ?>
                                 </td>
                                 <td id="price_<?php echo $i; ?>">
                                     <?php echo number_format($item['Gia'], 0, ',', '.'); ?> VNĐ
@@ -145,7 +144,7 @@
                                     <form action="ShopCart.php" method="post">
                                         <input type="hidden" name="updateId" value="<?php echo $i; ?>">
                                         <input type="number" name="sl_<?php echo $i; ?>" class="cart-qty-single"
-                                            value="<?php echo $item['SoLuong']; ?>" min="1" max="1000">
+                                            value="<?php echo $item['SoLuong']; ?>" min="1" max="1000" onchange="updateTotal()">
                                         <button type="submit" name="updateItem" class="text-primary">Cập nhật</button>
                                     </form>
                                 </td>
@@ -174,11 +173,9 @@
                                 <td></td>
                                 <td><strong id="totalPrice">0</strong></td>
                                 <td>
-                                    <form action="ThanhToan.php" method="post" onsubmit="return validateForm()">
-                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
-
+                                    <form action="ThanhToan.php" method="post">
                                         <input type="hidden" name="email" id="email">
-                                        <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
+                                        <button type="submit" class="btn btn-danger btn-custom-size">Thanh toán</button>
                                     </form>
                                 </td>
                             </tr>
@@ -197,61 +194,32 @@
 
 </html>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        updateTotal();
+    });
+
     function updateTotal() {
         var total = 0;
-        var countChecked = 0;
+        var rows = document.querySelectorAll('tbody tr');
 
-        var checkboxes = document.querySelectorAll('.item-checkbox:checked');
-
-        checkboxes.forEach(function(checkbox) {
-            var rowIndex = checkbox.value;
-            var isChecked = checkbox.checked;
-            if (isChecked) {
-                var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
-                total += totalItem;
-                countChecked++;
-            }
+        rows.forEach(function (row) {
+            var totalItem = parseFloat(row.querySelector('td:nth-child(4)').innerText.replace(/\./g, '').replace(' VNĐ', ''));
+            total += totalItem;
         });
 
-    //
-    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
-
-        if (countChecked > 0) {
-            document.querySelector('#totalPrice').innerText = total + ' VNĐ';
-        } else {
-            document.querySelector('#totalPrice').innerText = '0 VNĐ';
-        }
+        total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0}) + ' VNĐ';
+        document.querySelector('#totalPrice').innerText = total;
     }
 
     function setEmailFromLocalStorage() {
         if(localStorage.getItem('email')) {
-            
             var email = localStorage.getItem('email');
-            
             document.getElementById('email').value = email;
         }
     }
 
-    
     function validateForm() {
-        var checkboxes = document.querySelectorAll('.item-checkbox');
-        var isChecked = false;
-
-        
-        checkboxes.forEach(function(checkbox) {
-            if (checkbox.checked) {
-                isChecked = true;
-            }
-        });
-
-        if (!isChecked) {
-            alert("Vui lòng chọn ít nhất một mục để thanh toán.");
-            return false;
-        } else {
-            setEmailFromLocalStorage();
-            return true;
-        }
+        setEmailFromLocalStorage();
+        return true;
     }
 </script>
-
-
