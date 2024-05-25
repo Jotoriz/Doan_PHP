@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <?php
-    $pdo = new PDO("mysql:host=localhost; dbname=ql_vanphongpham", "root", "");
+    $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
     $pdo->query("set names utf8");
     
     session_start();
@@ -35,65 +35,67 @@
     }
     
 
-    if(isset($_POST['add_to_cart'])) {
-        $maSP = $_POST['MaSP'];
-        $tenSP = $_POST['TenSP'];
-        $gia = $_POST['Gia'];
-        $sl = $_POST['sl'];
+if (isset($_POST['add_to_cart'])) {
+    $maSP = $_POST['MaSP'];
+    $tenSP = $_POST['TenSP'];
+    $gia = $_POST['Gia'];
+    $sl = $_POST['sl'];
 
-        $product = array(
+    $product = array(
+        'MaSP' => $maSP,
+        'TenSP' => $tenSP,
+        'Gia' => $gia,
+        'SoLuong' => $sl
+    );
+
+    $flag = 0;
+    $count = count($_SESSION['cart']);
+    for ($i = 0; $i < $count; $i++) {
+        $item = $_SESSION['cart'][$i];
+        if ($item["MaSP"] == $maSP) {
+            $flag = 1;
+            $sl_new = $sl + $item["SoLuong"];
+            $item["SoLuong"] = $sl_new;
+            $_SESSION['cart'][$i] = $item;
+            break;
+        }
+    }
+    if ($flag == 0) {
+        $sp = array(
             'MaSP' => $maSP,
             'TenSP' => $tenSP,
             'Gia' => $gia,
             'SoLuong' => $sl
         );
-
-        $flag=0;
-        $count = count($_SESSION['cart']);
-        for($i=0;$i<$count;$i++)
-        {
-            $item=$_SESSION['cart'][$i];
-            if($item["MaSP"]==$maSP)
-            {
-                $flag=1;
-                $sl_new=$sl+$item["SoLuong"];
-                $item["SoLuong"]=$sl_new;
-                $_SESSION['cart'][$i]=$item;
-                break;
-            }
-        }
-        if($flag == 0)
-        {
-            $sp=array(
-                'MaSP' => $maSP,
-                'TenSP' => $tenSP,
-                'Gia' => $gia,
-                'SoLuong' => $sl
-            );
-            $_SESSION['cart'][]=$sp;
-        }
+        $_SESSION['cart'][] = $sp;
     }
+}
 
-    $maSP = isset($_GET['id']) ? $_GET['id'] : null;
+$maSP = isset($_GET['id']) ? $_GET['id'] : null;
 
-    if ($maSP) {
-        $pdo1 = new PDO("mysql:host=localhost; dbname=ql_vanphongpham", "root", "");
-        $pdo1->query("set names utf8");
+if ($maSP) {
+    $pdo1 = new PDO("mysql:host=localhost; dbname=ql_vanphongpham", "root", "");
+    $pdo1->query("set names utf8");
 
-        $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
-        $hinh = $pdo1->query($sqlHinh)->fetch(PDO::FETCH_ASSOC);
-        $imgUrl = $hinh['Hinh'];
-    }
-    
+    $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
+    $hinh = $pdo1->query($sqlHinh)->fetch(PDO::FETCH_ASSOC);
+    $imgUrl = $hinh['Hinh'];
+}
+
 ?>
+<style>
+    .shopcart {
+        min-height: 484px;
+    }
+</style>
 
 <body>
     <?php
-    include "HeaderNhanVienKhachHang.php";
+    include "Header.php";
 
     include "SubHeader.php";
     ?>
-    <div class="product mt-5">
+    <div class="product mt-5 shopcart">
         <h2 align="center" style="color:#900;">THÔNG TIN GIỎ HÀNG CỦA BẠN</h2>
         <?php if (empty($_SESSION['cart'])) { ?>
             <table class="table">
@@ -133,10 +135,8 @@
                             $itemCounter += $item["SoLuong"];
                             ?>
                             <tr>
-                                <td>
-                                    <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;">
-                                    <?php echo $item['TenSP']; ?>
-                                </td>
+                                <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;">
+                                <?php echo $item['TenSP']; ?>
                                 <td id="price_<?php echo $i; ?>">
                                     <?php echo number_format($item['Gia'], 0, ',', '.'); ?> VNĐ
                                 </td>
@@ -173,9 +173,11 @@
                                 <td></td>
                                 <td><strong id="totalPrice">0</strong></td>
                                 <td>
-                                    <form action="ThanhToan.php" method="post">
+                                    <form action="ThanhToan.php" method="post" onsubmit="return validateForm()">
+                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
+
                                         <input type="hidden" name="email" id="email">
-                                        <button type="submit" class="btn btn-danger btn-custom-size">Thanh toán</button>
+                                        <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
                                     </form>
                                 </td>
                             </tr>
@@ -207,19 +209,45 @@
             total += totalItem;
         });
 
-        total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0}) + ' VNĐ';
-        document.querySelector('#totalPrice').innerText = total;
+    //
+    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
+
+        if (countChecked > 0) {
+            document.querySelector('#totalPrice').innerText = total + ' VNĐ';
+        } else {
+            document.querySelector('#totalPrice').innerText = '0 VNĐ';
+        }
     }
 
     function setEmailFromLocalStorage() {
         if(localStorage.getItem('email')) {
+            
             var email = localStorage.getItem('email');
+            
             document.getElementById('email').value = email;
         }
     }
 
+    
     function validateForm() {
-        setEmailFromLocalStorage();
-        return true;
+        var checkboxes = document.querySelectorAll('.item-checkbox');
+        var isChecked = false;
+
+        
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                isChecked = true;
+            }
+        });
+
+        if (!isChecked) {
+            alert("Vui lòng chọn ít nhất một mục để thanh toán.");
+            return false;
+        } else {
+            setEmailFromLocalStorage();
+            return true;
+        }
     }
 </script>
+
+

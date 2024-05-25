@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="ThongTinCaNhanKH.css">
 </head>
 
+<style>
+    .auth {
+        margin-bottom: 173px;
+    }
+</style>
 
 <body>
     <?php
@@ -35,19 +40,19 @@
                     <div class="row">
                         <div class="col">
                             <label>Mật Khẩu Cũ </label>
-                            <input type="text" name="Old_Pasword" class="in">
+                            <input type="password" name="Old_Pasword" class="in">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <label>Mật Khẩu Mới </label>
-                            <input type="text" name="NewPassword" class="in">
+                            <input type="password" name="NewPassword" class="in">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <label>Nhập Lại Mật Khẩu Mới </label>
-                            <input type="text" name="ReNewPassword" class="in">
+                            <input type="password" name="ReNewPassword" class="in">
                         </div>
                     </div>
                     <div class="row">

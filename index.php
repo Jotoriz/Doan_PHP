@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tất cả</title>
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -28,7 +28,21 @@
                 $currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
                 $startIndex = ($currentPage - 1) * $productsPerPage;
 
-                if (isset($_GET['loaiSP'])) {
+                if (isset($_GET['search'])) {
+                    $search = $_GET['search'];
+                    $sql = "SELECT MaSP, TenSP, Gia
+                        FROM sanpham
+                        WHERE TenSP LIKE :search
+                        LIMIT :startIndex, :productsPerPage";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->bindValue(':search', '%' . $search . '%', PDO::PARAM_STR);
+
+                    $countSql = "SELECT COUNT(*) as total
+                        FROM sanpham
+                        WHERE TenSP LIKE :search";
+                    $countStmt = $pdo->prepare($countSql);
+                    $countStmt->bindValue(':search', '%' . $search . '%', PDO::PARAM_STR);
+                } else if (isset($_GET['loaiSP'])) {
                     $loaiSP = $_GET['loaiSP'];
                     $sql = "SELECT MaSP, TenSP, Gia
                         FROM sanpham
@@ -82,27 +96,29 @@
                 ?>
             </div>
 
-            <?php if (!isset($_GET['loaiSP'])) { ?>
-                <div class="row">
-                    <div class="pagination col">
-                        <?php
-                        $sql = "SELECT COUNT(*) AS totalCount FROM sanpham";
-                        $stmt = $pdo->query($sql);
-                        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                        $totalCount = $result['totalCount'];
-                        $totalPages = ceil($totalCount / $productsPerPage);
-                        ?>
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination justify-content-center" id="pagination">
-                                <?php for ($page = 1; $page <= $totalPages; $page++) { ?>
-                                    <li class="page-item <?php echo ($page == $currentPage) ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
-                                    </li>
-                                <?php } ?>
-                            </ul>
-                        </nav>
+            <?php if (!isset($_GET['loaiSP']) && !isset($_GET['search'])) { ?>
+                <?php if (!isset($_GET['loaiSP']) || !isset($_GET['search'])) { ?>
+                    <div class="row">
+                        <div class="pagination col">
+                            <?php
+                            $sql = "SELECT COUNT(*) AS totalCount FROM sanpham";
+                            $stmt = $pdo->query($sql);
+                            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                            $totalCount = $result['totalCount'];
+                            $totalPages = ceil($totalCount / $productsPerPage);
+                            ?>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center" id="pagination">
+                                    <?php for ($page = 1; $page <= $totalPages; $page++) { ?>
+                                        <li class="page-item <?php echo ($page == $currentPage) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page; ?>"><?php echo $page; ?></a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
             <?php } ?>
         </div>
 
