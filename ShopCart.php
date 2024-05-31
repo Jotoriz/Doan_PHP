@@ -131,59 +131,58 @@ if ($maSP) {
 
         $total = (float) $item["Gia"] * (int) $item["SoLuong"];
 
-        $totalCounter += $total;
-        $itemCounter += $item["SoLuong"];
-        ?>
-        <tr>
-            <td>
-                <div style="display: flex; align-items: center;">
-                    <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;">
-                    <?php echo $item['TenSP']; ?>
-                </div>
-            </td>
-            <td id="price_<?php echo $i; ?>">
-                <?php echo number_format($item['Gia'], 0, ',', '.'); ?> VNĐ
-            </td>
-            <td>
-                <form action="ShopCart.php" method="post">
-                    <input type="hidden" name="updateId" value="<?php echo $i; ?>">
-                    <input type="number" name="sl_<?php echo $i; ?>" class="cart-qty-single"
-                        value="<?php echo $item['SoLuong']; ?>" min="1" max="1000" onchange="updateTotal()">
-                    <button type="submit" name="updateItem" class="text-primary">Cập nhật</button>
-                </form>
-            </td>
-            <td id="total_<?php echo $i; ?>">
-                <?php echo number_format($total, 0, ',', '.'); ?> VNĐ
-            </td>
-            <td>
-                <form action="ShopCart.php" method="post">
-                    <input type="hidden" name="delId" value="<?php echo $i; ?>">
-                    <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Xóa</button>
-                </form>
-            </td>
-        </tr>
-        <?php } ?>
-        <tr class="border-top border-bottom">
-            <td>
-                <form action="ShopCart.php" method="post">
-                    <input type="hidden" name="emptyCart" value="1">
-                    <button type="submit" class="btn btn-danger btn-custom-size">Xóa tất cả</button>
-                </form>
-            </td>
-            <td></td>
-            <td></td>
-            <td><strong id="totalPrice">0</strong></td>
-            <td>
-                <form action="ThanhToan.php" method="post" onsubmit="return validateForm()">
-                    <input type="hidden" name="delId" value="<?php echo $i; ?>">
+                            $totalCounter += $total;
+                            $itemCounter += $item["SoLuong"];
+                            ?>
+                            <tr>
+                                <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;">
+                                <?php echo $item['TenSP']; ?>
+                                <td id="price_<?php echo $i; ?>">
+                                    <?php echo number_format($item['Gia'], 0, ',', '.'); ?> VNĐ
+                                </td>
+                                <td>
+                                    <form action="ShopCart.php" method="post">
+                                        <input type="hidden" name="updateId" value="<?php echo $i; ?>">
+                                        <input type="number" name="sl_<?php echo $i; ?>" class="cart-qty-single"
+                                            value="<?php echo $item['SoLuong']; ?>" min="1" max="1000" onchange="updateTotal()">
+                                        <button type="submit" name="updateItem" class="text-primary">Cập nhật</button>
+                                    </form>
+                                </td>
 
-                    <input type="hidden" name="email" id="email">
-                    <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
-                </form>
-            </td>
-        </tr>
-</tbody>
+                                <td id="total_<?php echo $i; ?>">
+                                    <?php echo number_format($total, 0, ',', '.'); ?> VNĐ
+                                </td>
+                                <td>
+                                    <form action="ShopCart.php" method="post">
+                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
+                                        <button type="submit" name="deleteItem"
+                                            class="btn btn-danger btn-custom-size">Xóa</button>
+                                    </form>
 
+                                </td>
+                            </tr>
+                            <?php } ?>
+                            <tr class="border-top border-bottom">
+                                <td>
+                                    <form action="ShopCart.php" method="post">
+                                        <input type="hidden" name="emptyCart" value="1">
+                                        <button type="submit" class="btn btn-danger btn-custom-size">Xóa tất cả</button>
+                                    </form>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td><strong id="totalPrice">0</strong></td>
+                                <td>
+                                    <form action="ThanhToan.php" method="post" onsubmit="return validateForm()">
+                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
+
+                                        <input type="hidden" name="email" id="email">
+                                        <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        
+                    </tbody>
                 </table>
             </form>
         <?php } ?>
@@ -210,8 +209,8 @@ if ($maSP) {
             total += totalItem;
         });
 
-    //
-    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
+        //
+        total = total.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
 
         if (countChecked > 0) {
             document.querySelector('#totalPrice').innerText = total + ' VNĐ';
@@ -221,21 +220,21 @@ if ($maSP) {
     }
 
     function setEmailFromLocalStorage() {
-        if(localStorage.getItem('email')) {
-            
+        if (localStorage.getItem('email')) {
+
             var email = localStorage.getItem('email');
-            
+
             document.getElementById('email').value = email;
         }
     }
 
-    
+
     function validateForm() {
         var checkboxes = document.querySelectorAll('.item-checkbox');
         var isChecked = false;
 
-        
-        checkboxes.forEach(function(checkbox) {
+
+        checkboxes.forEach(function (checkbox) {
             if (checkbox.checked) {
                 isChecked = true;
             }
@@ -250,5 +249,3 @@ if ($maSP) {
         }
     }
 </script>
-
-
