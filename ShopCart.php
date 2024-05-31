@@ -9,31 +9,29 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <?php
-    $pdo = new PDO("mysql:host=localhost; dbname=ql_vanphongpham", "root", "");
-    $pdo->query("set names utf8");
-    
-    session_start();
-    if(!isset($_SESSION['cart']))
-    {
-        $_SESSION['cart']=[];
+$pdo = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
+$pdo->query("set names utf8");
+
+session_start();
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
+    unset($_SESSION['cart']);
+}
+
+if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
+    array_splice($_SESSION['cart'], $_POST['delId'], 1);
+}
+
+if (isset($_POST['updateItem'])) {
+    $index = $_POST['updateId'];
+    $new_quantity = $_POST['sl_' . $index];
+    if (isset($_SESSION['cart'][$index])) {
+        $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
     }
-    
-    if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
-        unset($_SESSION['cart']);
-    }
-    
-    if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
-        array_splice($_SESSION['cart'], $_POST['delId'], 1);
-    }
-    
-    if (isset($_POST['updateItem'])) {
-        $index = $_POST['updateId'];
-        $new_quantity = $_POST['sl_'.$index]; 
-        if (isset($_SESSION['cart'][$index])) {
-            $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
-        }
-    }
-    
+}
 
 if (isset($_POST['add_to_cart'])) {
     $maSP = $_POST['MaSP'];
@@ -48,54 +46,39 @@ if (isset($_POST['add_to_cart'])) {
         'SoLuong' => $sl
     );
 
-    $flag = 0;
-    $count = count($_SESSION['cart']);
-    for ($i = 0; $i < $count; $i++) {
-        $item = $_SESSION['cart'][$i];
+    $flag = false;
+    foreach ($_SESSION['cart'] as &$item) {
         if ($item["MaSP"] == $maSP) {
-            $flag = 1;
-            $sl_new = $sl + $item["SoLuong"];
-            $item["SoLuong"] = $sl_new;
-            $_SESSION['cart'][$i] = $item;
+            $item["SoLuong"] += $sl;
+            $flag = true;
             break;
         }
     }
-    if ($flag == 0) {
-        $sp = array(
-            'MaSP' => $maSP,
-            'TenSP' => $tenSP,
-            'Gia' => $gia,
-            'SoLuong' => $sl
-        );
-        $_SESSION['cart'][] = $sp;
+    unset($item);
+
+    if (!$flag) {
+        $_SESSION['cart'][] = $product;
     }
 }
 
 $maSP = isset($_GET['id']) ? $_GET['id'] : null;
 
 if ($maSP) {
-    $pdo1 = new PDO("mysql:host=localhost; dbname=ql_vanphongpham", "root", "");
+    $pdo1 = new PDO("mysql:host=localhost;dbname=ql_vanphongpham", "root", "");
     $pdo1->query("set names utf8");
 
     $sqlHinh = "SELECT Hinh FROM hinhanh WHERE masp = '$maSP'";
     $hinh = $pdo1->query($sqlHinh)->fetch(PDO::FETCH_ASSOC);
     $imgUrl = $hinh['Hinh'];
 }
-
 ?>
-<style>
-    .shopcart {
-        min-height: 484px;
-    }
-</style>
 
 <body>
     <?php
     include "Header.php";
-
     include "SubHeader.php";
     ?>
-    <div class="product mt-5 shopcart">
+    <div class="product mt-5">
         <h2 align="center" style="color:#900;">THÔNG TIN GIỎ HÀNG CỦA BẠN</h2>
         <?php if (empty($_SESSION['cart'])) { ?>
             <table class="table">
@@ -122,35 +105,38 @@ if ($maSP) {
                         </tr>
                     </thead>
                     <tbody>
-    <?php
-    $totalCounter = 0;
-    $itemCounter = 0;
-    foreach ($_SESSION['cart'] as $i => $item) {
-        $maSP = $item["MaSP"];
-        $imgUrl = "image/SanPham/" . $maSP . ".jpg";
+                        <?php
+                        $totalCounter = 0;
+                        $itemCounter = 0;
+                        foreach ($_SESSION['cart'] as $i => $item) {
+                            $maSP = $item["MaSP"];
+                            $imgUrl = "image/SanPham/" . $maSP . ".jpg";
 
-        $total = (float) $item["Gia"] * (int) $item["SoLuong"];
-
+                            $total = (float) $item["Gia"] * (int) $item["SoLuong"];
                             $totalCounter += $total;
                             $itemCounter += $item["SoLuong"];
+
                             ?>
                             <tr>
-                                <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;">
-                                <?php echo $item['TenSP']; ?>
+                                <td>
+                                    <img src="<?php echo $imgUrl; ?>" class="rounded img-thumbnail mr-2" style="width:60px;">
+                                    <?php echo $item['TenSP'];?>
+                                </td>
+
                                 <td id="price_<?php echo $i; ?>">
-                                    <?php echo number_format($item['Gia'], 0, ',', '.'); ?> VNĐ
+                                    <?php echo $item['Gia']; ?> VNĐ
                                 </td>
                                 <td>
                                     <form action="ShopCart.php" method="post">
                                         <input type="hidden" name="updateId" value="<?php echo $i; ?>">
                                         <input type="number" name="sl_<?php echo $i; ?>" class="cart-qty-single"
-                                            value="<?php echo $item['SoLuong']; ?>" min="1" max="1000" onchange="updateTotal()">
+                                            value="<?php echo $item['SoLuong']; ?>" min="1" max="1000">
                                         <button type="submit" name="updateItem" class="text-primary">Cập nhật</button>
                                     </form>
                                 </td>
 
                                 <td id="total_<?php echo $i; ?>">
-                                    <?php echo number_format($total, 0, ',', '.'); ?> VNĐ
+                                    <?php echo $total; ?>.000 VNĐ
                                 </td>
                                 <td>
                                     <form action="ShopCart.php" method="post">
@@ -171,11 +157,10 @@ if ($maSP) {
                                 </td>
                                 <td></td>
                                 <td></td>
-                                <td><strong id="totalPrice">0</strong></td>
+                                <td><strong id="totalPrice"><?php echo $totalCounter; ?>.000 VNĐ</strong></td>
                                 <td>
-                                    <form action="ThanhToan.php" method="post" onsubmit="return validateForm()">
+                                    <form action="ThanhToan.php" method="post">
                                         <input type="hidden" name="delId" value="<?php echo $i; ?>">
-
                                         <input type="hidden" name="email" id="email">
                                         <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
                                     </form>
@@ -193,59 +178,42 @@ if ($maSP) {
     <script src="Bootstrap/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/d3f4e54f8d.js" crossorigin="anonymous"></script>
 </body>
+</html>
 
 </html>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        updateTotal();
+function updateTotal() {
+    var total = 0;
+    var countChecked = 0;
+
+    var checkboxes = document.querySelectorAll('.item-checkbox:checked');
+
+    checkboxes.forEach(function(checkbox) {
+        var rowIndex = checkbox.value;
+        var isChecked = checkbox.checked;
+        if (isChecked) {
+            var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
+            total += totalItem;
+            countChecked++;
+        }
     });
 
-    function updateTotal() {
-        var total = 0;
-        var rows = document.querySelectorAll('tbody tr');
+    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
 
-        rows.forEach(function (row) {
-            var totalItem = parseFloat(row.querySelector('td:nth-child(4)').innerText.replace(/\./g, '').replace(' VNĐ', ''));
-            total += totalItem;
-        });
-
-        //
-        total = total.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
-
-        if (countChecked > 0) {
-            document.querySelector('#totalPrice').innerText = total + ' VNĐ';
-        } else {
-            document.querySelector('#totalPrice').innerText = '0 VNĐ';
-        }
+    if (countChecked > 0) {
+        document.querySelector('#totalPrice').innerText = total + ' VNĐ';
+    } else {
+        document.querySelector('#totalPrice').innerText = '0 VNĐ';
     }
-
-    function setEmailFromLocalStorage() {
-        if (localStorage.getItem('email')) {
-
+}
+function setEmailFromLocalStorage() {
+        if(localStorage.getItem('email')) {
+            
             var email = localStorage.getItem('email');
-
+            
             document.getElementById('email').value = email;
         }
     }
 
-
-    function validateForm() {
-        var checkboxes = document.querySelectorAll('.item-checkbox');
-        var isChecked = false;
-
-
-        checkboxes.forEach(function (checkbox) {
-            if (checkbox.checked) {
-                isChecked = true;
-            }
-        });
-
-        if (!isChecked) {
-            alert("Vui lòng chọn ít nhất một mục để thanh toán.");
-            return false;
-        } else {
-            setEmailFromLocalStorage();
-            return true;
-        }
-    }
 </script>
