@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="Bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
+<style>
+    .card {
+        height: 450px;
+    }
+</style>
 
 <body>
     <?php
@@ -87,7 +92,7 @@
                     echo '<img class="card-img-top" src="./image/SanPham/' . $productId . '.jpg" alt="' . $productName . '">';
                     echo '<div class="card-body">';
                     echo '<h5 class="card-title">' . $productName . '</h5>';
-                    echo '<p class="card-text">' . $productPrice . '</p>';
+                    echo '<p class="card-text">' . number_format($productPrice, 0, ',', '.') . ' ₫</p>';
                     echo '</div>';
                     echo '</div>';
                     echo '</a>';

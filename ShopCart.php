@@ -9,31 +9,30 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <?php
-    $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
-    $pdo->query("set names utf8");
-    
-    session_start();
-    if(!isset($_SESSION['cart']))
-    {
-        $_SESSION['cart']=[];
+$pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
+$pdo->query("set names utf8");
+
+session_start();
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
+    unset($_SESSION['cart']);
+}
+
+if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
+    array_splice($_SESSION['cart'], $_POST['delId'], 1);
+}
+
+if (isset($_POST['updateItem'])) {
+    $index = $_POST['updateId'];
+    $new_quantity = $_POST['sl_' . $index];
+    if (isset($_SESSION['cart'][$index])) {
+        $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
     }
-    
-    if (isset($_POST['emptyCart']) && ($_POST['emptyCart'] == 1)) {
-        unset($_SESSION['cart']);
-    }
-    
-    if (isset($_POST['delId']) && ($_POST['delId'] >= 0)) {
-        array_splice($_SESSION['cart'], $_POST['delId'], 1);
-    }
-    
-    if (isset($_POST['updateItem'])) {
-        $index = $_POST['updateId'];
-        $new_quantity = $_POST['sl_'.$index]; 
-        if (isset($_SESSION['cart'][$index])) {
-            $_SESSION['cart'][$index]['SoLuong'] = $new_quantity;
-        }
-    }
-    
+}
+
 
 if (isset($_POST['add_to_cart'])) {
     $maSP = $_POST['MaSP'];
@@ -161,27 +160,28 @@ if ($maSP) {
 
                                 </td>
                             </tr>
-                            <?php } ?>
-                            <tr class="border-top border-bottom">
-                                <td>
-                                    <form action="ShopCart.php" method="post">
-                                        <input type="hidden" name="emptyCart" value="1">
-                                        <button type="submit" class="btn btn-danger btn-custom-size">Xóa tất cả</button>
-                                    </form>
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td><strong id="totalPrice">0</strong></td>
-                                <td>
-                                    <form action="ThanhToan.php" method="post" onsubmit="return validateForm()">
-                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
+                        <?php } ?>
+                        <tr class="border-top border-bottom">
+                            <td>
+                                <form action="ShopCart.php" method="post">
+                                    <input type="hidden" name="emptyCart" value="1">
+                                    <button type="submit" class="btn btn-danger btn-custom-size">Xóa tất cả</button>
+                                </form>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td><strong id="totalPrice">0</strong></td>
+                            <td>
+                                <form action="ThanhToan.php" method="post" onsubmit="return validateForm()">
+                                    <input type="hidden" name="delId" value="<?php echo $i; ?>">
 
-                                        <input type="hidden" name="email" id="email">
-                                        <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        
+                                    <input type="hidden" name="email" id="email">
+                                    <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh
+                                        toán</button>
+                                </form>
+                            </td>
+                        </tr>
+
                     </tbody>
                 </table>
             </form>
@@ -209,8 +209,8 @@ if ($maSP) {
             total += totalItem;
         });
 
-    //
-    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
+        //
+        total = total.toLocaleString('vi-VN', { minimumFractionDigits: 0 });
 
         if (countChecked > 0) {
             document.querySelector('#totalPrice').innerText = total + ' VNĐ';
@@ -220,21 +220,21 @@ if ($maSP) {
     }
 
     function setEmailFromLocalStorage() {
-        if(localStorage.getItem('email')) {
-            
+        if (localStorage.getItem('email')) {
+
             var email = localStorage.getItem('email');
-            
+
             document.getElementById('email').value = email;
         }
     }
 
-    
+
     function validateForm() {
         var checkboxes = document.querySelectorAll('.item-checkbox');
         var isChecked = false;
 
-        
-        checkboxes.forEach(function(checkbox) {
+
+        checkboxes.forEach(function (checkbox) {
             if (checkbox.checked) {
                 isChecked = true;
             }
@@ -249,5 +249,3 @@ if ($maSP) {
         }
     }
 </script>
-
-

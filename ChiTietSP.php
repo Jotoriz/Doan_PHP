@@ -72,13 +72,13 @@ if (isset($_GET["id"])) {
             ?>
             <div class='col'>
                 <h2><?php echo $tenSP; ?></h2>
-                <p>Giá: <?php echo $gia; ?></p>
+                <p>Giá: <?php echo number_format($gia, 0, ',', '.'); ?></p>
 
                 <div class="buttons">
                     <form action="ShopCart.php" method="POST">
                         <input type="hidden" name="MaSP" value="<?php echo $maSP; ?>">
                         <input type="hidden" name="TenSP" value="<?php echo $tenSP; ?>">
-                        <input type="hidden" name="Gia" value="<?php echo $gia; ?>">
+                        <input type="hidden" name="Gia" value="<?php echo number_format($gia, 0, ',', '.'); ?>">
                         <input type="number" name="sl" value="1" min="1">
                         <br></br>
                         <button type="submit" name="add_to_cart" class="add-to-cart btn btn-primary">Thêm vào giỏ
@@ -87,7 +87,8 @@ if (isset($_GET["id"])) {
                     </form>
                     <form action="DanhGia.php" method="GET">
                         <input type="hidden" name="MaSP" value="<?php echo htmlspecialchars($maSP); ?>">
-                        <button type="submit" class="rate-now btn btn-secondary">Đánh giá</button>
+                        <button type="submit" class="rate-now btn btn-secondary" style="margin-top: 20px">Đánh
+                            giá</button>
                     </form>
 
                 </div>

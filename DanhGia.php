@@ -89,53 +89,49 @@ include "SubHeader.php";
 </style>
 
 <?php
-    $pdo = new PDO("mysql:host=localhost; port=3307; dbname=ql_vanphongpham", "root", "");
-    $pdo->query("set names utf8");
-    
-    $successMessage = '';
-    
-    // Kiểm tra xem có tham số MaSP được truyền trong URL hay không
-    if(isset($_GET['MaSP']) && !empty($_GET['MaSP'])) {
-        $maSP = $_GET['MaSP'];
-        
-        // Truy vấn để lấy thông tin sản phẩm từ MaSP
-        $sql = "SELECT * FROM sanpham WHERE MaSP = :maSP";
+$pdo = new PDO("mysql:host=localhost; dbname=ql_vanphongpham", "root", "");
+$pdo->query("set names utf8");
+
+$successMessage = '';
+
+// Kiểm tra xem có tham số MaSP được truyền trong URL hay không
+if (isset($_GET['MaSP']) && !empty($_GET['MaSP'])) {
+    $maSP = $_GET['MaSP'];
+
+    // Truy vấn để lấy thông tin sản phẩm từ MaSP
+    $sql = "SELECT * FROM sanpham WHERE MaSP = :maSP";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':maSP', $maSP);
+    $stmt->execute();
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $maSP = $_GET['MaSP'];
+    $sao = $_POST['rating'];
+    $loidanhgia = $_POST['review'];
+
+    try {
+        $sql = "INSERT INTO danhgia (maSP, sao, loidanhgia) VALUES (:maSP, :sao, :loidanhgia)";
         $stmt = $pdo->prepare($sql);
+
         $stmt->bindParam(':maSP', $maSP);
-        $stmt->execute();
-        $product = $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $maSP = $_GET['MaSP'];
-        $sao = $_POST['rating'];
-        $loidanhgia = $_POST['review'];
-    
-        try {
-            $sql = "INSERT INTO danhgia (maSP, sao, loidanhgia) VALUES (:maSP, :sao, :loidanhgia)";
-            $stmt = $pdo->prepare($sql);
-    
-            $stmt->bindParam(':maSP', $maSP);
-            $stmt->bindParam(':sao', $sao);
-            $stmt->bindParam(':loidanhgia', $loidanhgia);
-    
-            if ($stmt->execute()) {
-                $successMessage = "Đánh giá của bạn đã được gửi thành công.";
-            } else {
-                $successMessage = "Có lỗi xảy ra. Vui lòng thử lại.";
-            }
-        } catch (PDOException $e) {
-            $successMessage = "Lỗi: " . $e->getMessage();
+        $stmt->bindParam(':sao', $sao);
+        $stmt->bindParam(':loidanhgia', $loidanhgia);
+
+        if ($stmt->execute()) {
+            $successMessage = "Đánh giá của bạn đã được gửi thành công.";
+        } else {
+            $successMessage = "Có lỗi xảy ra. Vui lòng thử lại.";
         }
+    } catch (PDOException $e) {
+        $successMessage = "Lỗi: " . $e->getMessage();
     }
-    
+}
+
 ?>
 
 <body>
-<?php
-    include "Header.php";
-    include "SubHeader.php";
-?>
     <div class="container">
         <h2 align="center" style="color:#900;">ĐÁNH GIÁ SẢN PHẨM</h2>
         <?php if ($successMessage): ?>
