@@ -100,6 +100,20 @@
                             echo '<i class="fa-regular fa-user icons user dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
                             echo '<ul class="dropdown-menu">';
                             echo '</ul>';
+                            echo '<li class="nav-item nav-link active giohang" id="cartItem">';
+                            echo '<a class="nav-link" href="ShopCart.php">';
+                            echo '<i class="fas fa-shopping-cart icons"></i>';
+                            if (session_status() == PHP_SESSION_NONE) {
+
+                                session_start();
+                            }
+                            $totalItemsInCart = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+
+                            if ($totalItemsInCart > 0) {
+                                echo '<span class="badge badge-pill badge-danger cart-badge">' . $totalItemsInCart . '</span>';
+                            }
+                            echo '</a>';
+                            echo '</li>';
                         } elseif ($role == 'NV') {
                             echo '<i class="fa-solid fa-user icons user dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>';
                             echo '<ul class="dropdown-menu">';
@@ -110,22 +124,7 @@
                             echo '<a href="DangNhap.php" class="auth_link">Đăng Nhập</a>';
                         }
                         ?>
-                        <li class="nav-item nav-link active giohang" id="cartItem">
-                            <a class="nav-link" href="ShopCart.php">
-                                <i class="fas fa-shopping-cart icons"></i>
-                                <?php
-                                if (session_status() == PHP_SESSION_NONE) {
 
-                                    session_start();
-                                }
-                                $totalItemsInCart = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
-
-                                if ($totalItemsInCart > 0) {
-                                    echo '<span class="badge badge-pill badge-danger cart-badge">' . $totalItemsInCart . '</span>';
-                                }
-                                ?>
-                            </a>
-                        </li>
 
                     </div>
                 </div>
