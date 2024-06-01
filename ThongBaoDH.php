@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_order'])) {
+    unset($_SESSION['cart']);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

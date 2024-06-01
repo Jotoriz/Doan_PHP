@@ -157,12 +157,23 @@ if ($maSP) {
                                 </td>
                                 <td></td>
                                 <td></td>
-                                <td><strong id="totalPrice"><?php echo $totalCounter; ?>.000 VNĐ</strong></td>
+                                <td><strong id="totalPrice"><?php echo $totalCounter; ?>.000 VNĐ</strong></td>s
+
                                 <td>
-                                    <form action="ThanhToan.php" method="post">
-                                        <input type="hidden" name="delId" value="<?php echo $i; ?>">
+                                    <form action="ThanhToan.php" method="post" onsubmit="setEmailFromLocalStorage()">
                                         <input type="hidden" name="email" id="email">
-                                        <button type="submit" name="deleteItem" class="btn btn-danger btn-custom-size">Thanh toán</button>
+                                        <input type="hidden" name="selected_products" id="selected_products">
+                                        <?php
+                                            foreach ($_SESSION['cart'] as $i => $item) {
+                                                $maSP = htmlspecialchars($item['MaSP']);
+                                                $imgUrl = "image/SanPham/" . $maSP . ".jpg";
+
+                                                echo '<input type="hidden" name="selected_products[' . $maSP . '][image]" value="' . htmlspecialchars($imgUrl) . '">';
+                                                echo '<input type="hidden" name="selected_products[' . $maSP . '][maSP]" value="' . $maSP . '">';
+                                                echo '<input type="hidden" name="selected_products[' . $maSP . '][soLuong]" value="' . htmlspecialchars($item['SoLuong']) . '">';
+                                            }
+                                        ?>
+                                        <button type="submit" id="buyButton" class="btn btn-success btn-custom-size">Mua Hàng</button>
                                     </form>
                                 </td>
                             </tr>
@@ -183,31 +194,32 @@ if ($maSP) {
 </html>
 
 <script>
-function updateTotal() {
-    var total = 0;
-    var countChecked = 0;
+    function updateTotal() {
+        var total = 0;
+        var countChecked = 0;
 
-    var checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        var checkboxes = document.querySelectorAll('.item-checkbox:checked');
 
-    checkboxes.forEach(function(checkbox) {
-        var rowIndex = checkbox.value;
-        var isChecked = checkbox.checked;
-        if (isChecked) {
-            var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
-            total += totalItem;
-            countChecked++;
+        checkboxes.forEach(function(checkbox) {
+            var rowIndex = checkbox.value;
+            var isChecked = checkbox.checked;
+            if (isChecked) {
+                var totalItem = parseFloat(document.querySelector('#total_' + rowIndex).innerText.replace(/\./g, '').replace(' VNĐ', ''));
+                total += totalItem;
+                countChecked++;
+            }
+        });
+
+        total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
+
+        if (countChecked > 0) {
+            document.querySelector('#totalPrice').innerText = total + ' VNĐ';
+        } else {
+            document.querySelector('#totalPrice').innerText = '0 VNĐ';
         }
-    });
-
-    total = total.toLocaleString('vi-VN', {minimumFractionDigits: 0});
-
-    if (countChecked > 0) {
-        document.querySelector('#totalPrice').innerText = total + ' VNĐ';
-    } else {
-        document.querySelector('#totalPrice').innerText = '0 VNĐ';
     }
-}
-function setEmailFromLocalStorage() {
+
+    function setEmailFromLocalStorage() {
         if(localStorage.getItem('email')) {
             
             var email = localStorage.getItem('email');
@@ -216,4 +228,20 @@ function setEmailFromLocalStorage() {
         }
     }
 
+    document.addEventListener('DOMContentLoaded', function() {
+        const buyButton = document.getElementById('buyButton');
+        
+        if (buyButton) {
+            buyButton.addEventListener('click', function(event) {
+                const email = localStorage.getItem('email');
+                if (!email) {
+                    event.preventDefault(); // Ngăn chặn hành động mặc định của nút
+                    const userConfirmed = confirm('Bạn chưa đăng nhập. Bạn có muốn đăng nhập không?');
+                    if (userConfirmed) {
+                        window.location.href = 'DangNhap.php'; // Chuyển hướng đến trang đăng nhập
+                    }
+                }
+            });
+        }
+    });
 </script>
