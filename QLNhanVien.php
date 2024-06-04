@@ -25,7 +25,7 @@ function SelectNV($pdo, $selectNV)
 }
 
 // Thực thi hàm để kiểm tra kết quả truy vấn
-$selectNV = "SELECT NV.MaNV, NV.HoTen_NV, NV.GioiTinh, NV.SDT_NV, NV.DiaChi_NV, NV.Email_NV, CV.TenCV, NV.TenDangNhap, NV.MatKhau 
+$selectNV = "SELECT NV.MaNV, NV.HoTen_NV, NV.GioiTinh, NV.SDT_NV, NV.DiaChi_NV, NV.Email_NV, CV.TenCV, NV.MatKhau 
                 FROM NhanVien NV 
                 INNER JOIN ChucVu CV ON NV.MaCV = CV.MaCV";
 
@@ -90,7 +90,7 @@ function TimKiemNV($pdo, $keyword)
     $searchQuery = "%$keyword%";
 
     // Truy vấn tìm kiếm nhân viên theo họ tên và email
-    $sql = "SELECT NV.MaNV, NV.HoTen_NV, NV.GioiTinh, NV.SDT_NV, NV.DiaChi_NV, NV.Email_NV, CV.TenCV, NV.TenDangNhap, NV.MatKhau 
+    $sql = "SELECT NV.MaNV, NV.HoTen_NV, NV.GioiTinh, NV.SDT_NV, NV.DiaChi_NV, NV.Email_NV, CV.TenCV, NV.MatKhau 
                 FROM NhanVien NV 
                 INNER JOIN ChucVu CV ON NV.MaCV = CV.MaCV
                 WHERE NV.HoTen_NV LIKE :keyword OR NV.Email_NV LIKE :keyword";
@@ -172,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <th scope="col">Địa chỉ</th>
                         <th scope="col">Email</th>
                         <th scope="col">Chức vụ</th>
-                        <th scope="col">Tên đăng nhập</th>
+
                         <th scope="col">Mật khẩu</th>
                         <th scope="col">Thao tác</th>
                     </tr>
@@ -187,7 +187,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <td><?php echo $NV['DiaChi_NV']; ?></td>
                                 <td><?php echo $NV['Email_NV']; ?></td>
                                 <td><?php echo $NV['TenCV']; ?></td>
-                                <td><?php echo $NV['TenDangNhap']; ?></td>
+
                                 <td><?php echo $NV['MatKhau']; ?></td>
                                 <td>
                                     <form method="POST" action="QLSuaNV.php">
